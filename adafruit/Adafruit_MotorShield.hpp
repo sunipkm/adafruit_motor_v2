@@ -32,8 +32,10 @@
 
 #include <stdint.h>
 #include "i2cbus/i2cbus.h"
+#include "gpiodev/gpiodev.h"
 
 #include <mutex>
+#include <list>
 
 namespace Adafruit
 {
@@ -79,9 +81,7 @@ namespace Adafruit
     {
     private:
         /**
-         * @brief Create a DCMotor object, un-initialized! You should never call this,
-         * instead have the {@link Adafruit_MotorShield} give you a DCMotor object
-         * with {@link Adafruit_MotorShield.getMotor}
+         * @brief Create an uninitialized DCMotor object.
          * 
          */
         DCMotor(void);
@@ -134,11 +134,9 @@ namespace Adafruit
      */
     class StepperMotor
     {
-    private:
+    protected:
         /**
-         * @brief Create a StepperMotor object, un-initialized!
-         * You should never call this, instead have the {@link Adafruit_MotorShield}
-         * give you a StepperMotor object with {@link Adafruit_MotorShield.getStepper}.
+         * @brief Create an uninitialized StepperMotor object.
          * 
          */
         StepperMotor(void);
@@ -187,11 +185,12 @@ namespace Adafruit
 
         friend class MotorShield; ///< Let MotorShield create StepperMotors
 
-    private:
+    protected:
         uint32_t usperstep;
-
-        std::mutex cs;
         MicroSteps microsteps;
+
+    private:
+        std::mutex cs;
         uint8_t *microstepcurve;
         uint8_t PWMApin, AIN1pin, AIN2pin;
         uint8_t PWMBpin, BIN1pin, BIN2pin;
@@ -199,6 +198,145 @@ namespace Adafruit
         uint8_t currentstep;
         MotorShield *MC;
         bool initd;
+    };
+
+    /**
+     * @brief Structure describing a limit switch
+     * 
+     */
+    class LimitSW
+    {
+    public:
+        int pos;      ///< Limit switch position
+        MotorDir dir; ///< Direction from origin to limit switch
+        int pin;      ///< GPIO pin
+        int active;   ///< active gpio state
+
+        /**
+         * @brief Create a new empty limit switch object.
+         * 
+         */
+        LimitSW()
+        {
+            pos = 0;
+            dir = MotorDir::BRAKE;
+            pin = -1;
+            active = GPIO_HIGH;
+        }
+
+        /**
+         * @brief Create a new limit switch object with properties.
+         * 
+         * @param p Limit SW position.
+         * @param d Direction from origin.
+         * @param pin GPIO pin.
+         * @param state GPIO state when active.
+         */
+        LimitSW(int p, MotorDir d, int pin, int state = GPIO_HIGH)
+        {
+            pos = p;
+            dir = d;
+            pin = pin;
+            active = state;
+        }
+
+        /**
+         * @brief Assignment operator
+         * 
+         * @param rhs Reference to LimitSW object
+         */
+        void operator=(const LimitSW &rhs)
+        {
+            pos = rhs.pos;
+            dir = rhs.dir;
+        }
+
+        /**
+         * @brief Comparison operator
+         * 
+         * @param lhs 
+         * @param rhs 
+         * @return bool true if lhs.pos < rhs.pos, else false
+         */
+        friend bool operator<(const LimitSW &lhs,
+                              const LimitSW &rhs)
+        {
+            return lhs.pos < rhs.pos;
+        }
+    };
+
+    /**
+     * @brief Advanced Stepper Motor class with location based movement and limit switch support.
+     * 
+     */
+    class StepperMotorA : public StepperMotor
+    {
+    private:
+        /**
+         * @brief Create an uninitialized StepperMotorA object.
+         * 
+         */
+        StepperMotorA(void);
+
+    public:
+        friend class MotorShield;
+
+        /**
+         * @brief Set the state of the stepper motor
+         * 
+         * @param origin Origin of coordinate system
+         * @param currentPos Current position of motor
+         * @param sw1 Limit switch 1
+         * @param sw2 Limit switch 2
+         * @param estop Optional: Emergency stop switch
+         * @return true on successful init, false on failure
+         */
+        bool setState(int origin, int currentPos, const LimitSW &sw1, const LimitSW &sw2, const LimitSW &estop);
+
+        /**
+         * @brief Return motor to origin
+         * 
+         * @return int Location of origin
+         */
+        int goHome();
+
+        /**
+         * @brief Step motor to destination
+         * 
+         * @param loc Destination
+         * @param style MotorStyle
+         * @return int End location
+         */
+        int goToLoc(int loc, MotorStyle style = SINGLE);
+
+        /**
+         * @brief Get the origin of the motor
+         * 
+         * @return int 
+         */
+        int getOrigin() const { return origin; }
+
+        /**
+         * @brief Get the current position of the motor
+         * 
+         * @return int 
+         */
+        int getCurrentPos() const { return currentPos; }
+
+        /**
+         * @brief Stops the motor if stepping.
+         * 
+         */
+        void stopMotor() { stopnow = true; }
+
+    private:
+        int origin;
+        int currentPos;
+        LimitSW sw1,
+            sw2,
+            estop;
+        volatile bool stopnow;
+        void moveSteps(int steps, MotorDir dir, bool ignoreSW, MotorStyle style);
     };
 
     /**
@@ -252,7 +390,7 @@ namespace Adafruit
          */
         StepperMotor *getStepper(uint16_t steps, uint8_t port, MicroSteps microsteps = STEP16);
 
-        friend class DCMotor; ///< Let DCMotors control the Shield
+        StepperMotorA *getStepperA(uint16_t steps, uint8_t port, MicroSteps microsteps = STEP16);
 
         /**
          * @brief Helper that sets the PWM output on a pin and manages 'all on or off'.
@@ -278,7 +416,7 @@ namespace Adafruit
         int _bus;
         uint16_t _freq;
         DCMotor dcmotors[4];
-        StepperMotor steppers[2];
+        StepperMotorA steppers[2];
         i2cbus bus[1];
         bool reset();
         bool setPWMFreq(float freq);

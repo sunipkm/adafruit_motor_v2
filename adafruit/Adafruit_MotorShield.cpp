@@ -33,6 +33,9 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <math.h>
+#include "gpiodev/gpiodev.h"
+
+#include <algorithm>
 
 #define LOW 0
 #define HIGH 1
@@ -166,7 +169,7 @@ namespace Adafruit
         return &dcmotors[num];
     }
 
-    StepperMotor *MotorShield::getStepper(uint16_t steps, uint8_t port, MicroSteps microsteps)
+    StepperMotorA *MotorShield::getStepperA(uint16_t steps, uint8_t port, MicroSteps microsteps)
     {
         if (!initd)
         {
@@ -229,6 +232,11 @@ namespace Adafruit
             steppers[port].BIN2pin = bin2;
         }
         return &steppers[port];
+    }
+
+    StepperMotor *MotorShield::getStepper(uint16_t steps, uint8_t port, MicroSteps microsteps)
+    {
+        return getStepperA(steps, port, microsteps);
     }
 
     /*************** Motors ****************/
@@ -555,6 +563,133 @@ namespace Adafruit
         }
 
         return currentstep;
+    }
+
+    StepperMotorA::StepperMotorA(void)
+    {
+        origin = -1;
+        currentPos = -1;
+        sw1.pin = -1;
+        sw2.pin = -1;
+        estop.pin = -1;
+        stopnow = false;
+    }
+
+    bool StepperMotorA::setState(int origin, int currentPos, const LimitSW &sw1, const LimitSW &sw2, const LimitSW &estop)
+    {
+        this->origin = origin;
+        this->currentPos = currentPos;
+        this->sw1 = sw1;
+        this->sw2 = sw2;
+        this->estop = estop;
+        LimitSW tmp;
+        if (sw2 < sw1)
+        {
+            tmp = this->sw2;
+            this->sw2 = this->sw1;
+            this->sw1 = this->sw2;
+        }
+        bool res = true;
+        if (gpioSetMode(this->sw1.pin, GPIO_IN) < 0)
+        {
+            res = false;
+            bprintlf("Error opening Limit SW1 (pin %d) as input", this->sw1.pin);
+            goto ret;
+        }
+        if (gpioSetMode(this->sw2.pin, GPIO_IN) < 0)
+        {
+            res = false;
+            bprintlf("Error opening Limit SW2 (pin %d) as input", this->sw2.pin);
+            goto ret;
+        }
+        if (this->estop.pin > 0)
+        {
+            if (gpioSetMode(this->estop.pin, GPIO_IN) < 0)
+            {
+                bprintlf("Error opening emergency stop switch (pin %d) as input", this->estop.pin);
+            }
+        }
+    ret:
+        return res;
+    }
+
+    int StepperMotorA::goHome()
+    {
+        return goToLoc(origin);
+    }
+
+    int StepperMotorA::goToLoc(int loc, MotorStyle style)
+    {
+        stopnow = false;
+        MotorDir dir = MotorDir::RELEASE;
+        // 1. Figure out which direction to go
+        // ********** SW1 ************ ORIGIN ************* CURRENT ******************* TARGET ****** SW2
+        if (loc < sw1.pos)
+        {
+            loc = sw1.pos;
+        }
+        if (loc > sw2.pos)
+        {
+            loc = sw2.pos;
+        }
+        if (loc < currentPos)
+        {
+            dir = sw2.dir;
+        }
+        else
+        {
+            dir = sw1.dir;
+        }
+        // 2. Figure out how many steps to go
+        int steps = loc > currentPos ? loc - currentPos : currentPos - loc;
+        moveSteps(steps, dir, false, style);
+        return currentPos;
+    }
+
+    void StepperMotorA::moveSteps(int steps, MotorDir dir, bool ignoreSW, MotorStyle style)
+    {
+        uint32_t uspers = usperstep;
+        if (style == INTERLEAVE)
+        {
+            uspers /= 2;
+        }
+        else if (style == MICROSTEP)
+        {
+            uspers /= microsteps;
+            steps *= microsteps;
+            dbprintlf("steps = %d", steps);
+        }
+
+        while (steps--)
+        {
+            if (!ignoreSW)
+            {
+                if (gpioRead(sw1.pin) == sw1.active || gpioRead(sw2.pin) == sw2.active)
+                {
+                    MotorDir _dir = MotorDir::RELEASE;
+                    if (dir == sw1.dir)
+                        _dir = sw2.dir;
+                    else if (dir == sw2.dir)
+                        _dir = sw1.dir;
+                    moveSteps(100, _dir, true, style);
+                }
+                else if (gpioRead(estop.pin) == estop.active)
+                {
+                    break;
+                }
+                else if (stopnow)
+                {
+                    stopnow = false;
+                    break;
+                }
+            }
+            onestep(dir, style);
+            if (dir == sw1.dir)
+                currentPos--;
+            else if (dir == sw2.dir)
+                currentPos++;
+            usleep(uspers);
+        }
     }
 
     /*************** Steppers **************/

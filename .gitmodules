@@ -1,3 +1,6 @@
 [submodule "i2cbus"]
 	path = i2cbus
 	url = https://github.com/sunipkm/i2cbus.git
+[submodule "gpiodev"]
+	path = gpiodev
+	url = https://github.com/sunipkm/gpiodev.git
