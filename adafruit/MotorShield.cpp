@@ -1,11 +1,11 @@
 /*!
  * @file MotorShield.cpp
  *
- * @mainpage Adafruit FXOS8700 accel/mag sensor driver
- *
+ * @mainpage Adafruit Motor Shield v2 Driver for Linux
+ * 
  * @section intro_sec Introduction
  *
- * This is the library for the Adafruit Motor Shield V2 for Arduino.
+ * This is the library for the Adafruit Motor Shield V2 for Linux.
  * It supports DC motors & Stepper motors with microstepping as well
  * as stacking-support. It is *not* compatible with the V1 library!
  * For use with the Motor Shield https://www.adafruit.com/products/1483
@@ -21,6 +21,7 @@
  * @section author Author
  *
  * Written by Limor Fried/Ladyada for Adafruit Industries.
+ * Ported to Linux by Sunip K. Mukherjee.
  *
  * @section license License
  *
@@ -28,7 +29,7 @@
  *
  */
 
-#include "Adafruit_MotorShield.hpp"
+#include "MotorShield.hpp"
 #include "meb_print.h"
 #include <unistd.h>
 #include <stdio.h>
@@ -43,8 +44,8 @@
 namespace Adafruit
 {
     static uint8_t microstepcurve8[] = {0, 50, 98, 142, 180, 212, 236, 250, 255};
-    ///! A sinusoial microstepping curve for the PWM output (8-bit range) with 17
-    /// points - last one is start of next step.
+    ///< A sinusoial microstepping curve for the PWM output (8-bit range) with 17
+    ///< points - last one is start of next step.
     static uint8_t microstepcurve16[] = {0, 25, 50, 74, 98, 120, 141, 162, 180,
                                          197, 212, 225, 236, 244, 250, 253, 255};
 

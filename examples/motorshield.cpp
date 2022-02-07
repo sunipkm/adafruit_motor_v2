@@ -1,4 +1,4 @@
-#include <adafruit/Adafruit_MotorShield.hpp>
+#include <Adafruit/MotorShield.hpp>
 #include <signal.h>
 
 volatile sig_atomic_t done = 0;

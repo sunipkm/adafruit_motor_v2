@@ -6,7 +6,7 @@ EDCXXFLAGS= -I./ -O2 -Wall -Wno-narrowing -std=gnu++11 $(CXXFLAGS)
 
 EDLDFLAGS= -lm -lpthread $(LDFLAGS)
 
-CPPOBJS=adafruit/Adafruit_MotorShield.o
+CPPOBJS=Adafruit/MotorShield.o
 MOTORSHIELDTEST=examples/motorshield.o
 
 COBJS=i2cbus/i2cbus.o \
@@ -21,8 +21,14 @@ motor: $(COBJS) $(CPPOBJS) $(MOTORSHIELDTEST)
 %.o: %.cpp
 	$(CXX) $(EDCXXFLAGS) -o $@ -c $<
 
-.PHONY: clean
+.PHONY: clean doc
+
+doc:
+	doxygen .doxyconfig
 
 clean:
 	rm -vf $(COBJS) $(CPPOBJS) $(MOTORSHIELDTEST)
 	rm -vf *.out
+
+spotless: clean
+	rm -vrf doc

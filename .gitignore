@@ -2,3 +2,4 @@
 **/*.o
 **/*.out
 **/.DS_Store
+**/doc

@@ -1,5 +1,5 @@
 /**
- * @file Adafruit_MotorShield.hpp
+ * @file MotorShield.hpp
  * @author Sunip K. Mukherjee (sunipkmukherjee@gmail.com), based on work by Limor Fried/Ladyada for Adafruit Industries.
  * @brief This is the library for the Adafruit Motor Shield V2 for Arduino. 
  * It supports DC motors & Stepper motors with microstepping as well 
@@ -151,7 +151,7 @@ namespace Adafruit
 
         /**
          * @brief Move the stepper motor with the given RPM speed,
-         * don't forget to call {@link Adafruit_StepperMotor.setSpeed} to set the speed!
+         * don't forget to call {@link Adafruit::StepperMotor::setSpeed} to set the speed!
          * 
          * @param steps Number of steps to move.
          * @param dir The direction of movement, can be FORWARD or BACKWARD.
@@ -266,7 +266,7 @@ namespace Adafruit
     };
 
     /**
-     * @brief Advanced Stepper Motor class with location based movement and limit switch support.
+     * @brief Object that controls and keeps state for a single stepper motor, with advanced location tracking and limit switch support.
      * 
      */
     class StepperMotorA : public StepperMotor
