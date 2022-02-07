@@ -818,9 +818,10 @@ namespace Adafruit
     {
         int counter = 10;
         bool failed = true;
+        uint8_t buf[2] = {addr, d};
         while (failed && counter--)
         {
-            failed = i2cbus_write(bus, &addr, 1) != 1;
+            failed = i2cbus_write(bus, buf, 2) != 2;
         }
         if (failed)
             return false;
