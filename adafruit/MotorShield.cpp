@@ -796,22 +796,10 @@ namespace Adafruit
         bool failed = true;
         while (failed && counter--)
         {
-            failed = i2cbus_write(bus, &addr, 1) != 1;
+            failed = i2cbus_xfer(bus, &addr, 1, &data, 1, 20) != 1;
         }
         if (failed)
-            throw std::runtime_error("Could not read from I2C bus");
-
-        usleep(20);
-
-        counter = 2;
-        failed = true;
-        while (failed && counter--)
-        {
-            failed = i2cbus_read(bus, &addr, 1) != 1;
-        }
-        if (failed)
-            throw std::runtime_error("Could not read from I2C bus");
-
+            throw std::runtime_error("Could not execute read/write transaction on I2C bus");
         return data;
     }
 
