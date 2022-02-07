@@ -480,7 +480,7 @@ namespace Adafruit
         currentstep += microsteps * 4;
         currentstep %= microsteps * 4;
 
-        dbprintlf("current step: %d, pwmA = %d, pwmB = %d", currentstep, ocra, ocrb);
+        dbprintlf("current step: %u, pwmA = %u, pwmB = %u", currentstep, ocra, ocrb);
         MC->setPWM(PWMApin, ocra * 16);
         MC->setPWM(PWMBpin, ocrb * 16);
 
