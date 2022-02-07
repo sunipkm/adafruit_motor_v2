@@ -1,6 +1,12 @@
 #include <Adafruit/MotorShield.hpp>
 #include <signal.h>
 
+#include <chrono>
+uint64_t get_ts_now()
+{
+    return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+}
+
 volatile sig_atomic_t done = 0;
 void sighandler(int sig)
 {
@@ -9,7 +15,7 @@ void sighandler(int sig)
 
 int main()
 {
-    signal(SIGINT | SIGHUP, sighandler);
+    signal(SIGINT, sighandler);
     Adafruit::MotorDir state = Adafruit::MotorDir::FORWARD;
     Adafruit::MotorShield AFMS;
     AFMS.begin();
@@ -19,11 +25,14 @@ int main()
     motor->setSpeed(1); // 100 rpm
     // FORWARD == LS 2 (increase in wavelength)
     // BACKWARD == LS 1 (decrease in wavelength)
-    int num_rev = 0;
+    float num_rev = 0;
+    uint64_t told = get_ts_now(), tnow = 0;
     while (!done)
     {
-        motor->step(200, state, Adafruit::MotorStyle::DOUBLE); // double coil, one full rotation
-        printf("Performed %d rotations\n", ++num_rev);
+        motor->step(1, state, Adafruit::MotorStyle::DOUBLE); // double coil, one full rotation
+        tnow = get_ts_now();
+        printf("Performed %.3f rotations in %.3f ms\n", (++num_rev) / 200, (tnow - told) * 0.001);
+        told = tnow;
     }
     motor->release();
     printf("\n\n");

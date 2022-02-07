@@ -59,9 +59,11 @@ namespace Adafruit
     MotorShield::~MotorShield()
     {
         for (int i = 0; i < 4; i++)
-            dcmotors[i].fullOff();
+            if (dcmotors[i].initd)
+                dcmotors[i].fullOff();
         for (int i = 0; i < 2; i++)
-            steppers[i].release();
+            if (steppers[i].initd)
+                steppers[i].release();
         i2cbus_close(bus);
     }
 

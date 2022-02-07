@@ -45,10 +45,12 @@ namespace Adafruit
  * 
  */
 #define ADAFRUIT_MOTORSHIELD_DEBUG 0
+#ifndef MEB_DBGLVL
 #define MEB_DBGLVL 0
+#endif // MEB_DBGLVL
 #elif ADAFRUIT_MOTORSHIELD_DEBUG > 0
 #define MEB_DBGLVL MEB_DBG_ALL
-#endif
+#endif // ADAFURUIT_MOTORSHIELD_DEBUG
     typedef enum _MotorStyle : uint8_t
     {
         SINGLE = 1,
