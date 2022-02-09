@@ -35,6 +35,7 @@
 #include "gpiodev/gpiodev.h"
 
 #include "clkgen.h"
+#include "meb_print.h"
 
 #include <mutex>
 #include <list>
@@ -219,7 +220,7 @@ namespace Adafruit
             while (data->steps--)
                 _this->onestep(data->dir, data->style);
             if (data->steps == 0)
-                destroy_clk(clk);
+                dbprintlf("Reached end of steps");
         }
     };
 

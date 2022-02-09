@@ -376,8 +376,9 @@ namespace Adafruit
         StepperMotorTimerData data = {this, steps, dir, style};
         clkgen_t clk = create_clk(uspers * 1000LLU, stepHandlerFn, &data);
         usleep(uspers * steps);
+        dbprintlf("After sleep: %u", data.steps);
         // while (data.steps);
-        // destroy_clk(clk);
+        destroy_clk(clk);
     }
 
 
