@@ -4,3 +4,6 @@
 [submodule "gpiodev"]
 	path = gpiodev
 	url = https://github.com/sunipkm/gpiodev.git
+[submodule "clkgen"]
+	path = clkgen
+	url = https://github.com/sunipkm/clkgen.git

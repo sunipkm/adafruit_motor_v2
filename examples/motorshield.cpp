@@ -1,6 +1,6 @@
 #include <Adafruit/MotorShield.hpp>
 #include <signal.h>
-
+#include <inttypes.h>
 #include <chrono>
 uint64_t get_ts_now()
 {
@@ -34,7 +34,7 @@ int main()
     tnow = get_ts_now();
     // printf("Performed %.3f rotations in %.3f ms\n", (++num_rev) / 200, (tnow - told) * 0.001);
     uint64_t tdelta = tnow - told;
-    printf("Took %llu microseconds (%.02lf seconds).", tdelta, tdelta / 1e6);
+    printf("Took %" PRIu64 " microseconds (%.02lf seconds).", tdelta, tdelta / 1e6);
     
     // }
     motor->release();

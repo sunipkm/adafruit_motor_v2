@@ -1,14 +1,14 @@
 /**
  * @file MotorShield.hpp
  * @author Sunip K. Mukherjee (sunipkmukherjee@gmail.com), based on work by Limor Fried/Ladyada for Adafruit Industries.
- * @brief This is the library for the Adafruit Motor Shield V2 for Arduino. 
- * It supports DC motors & Stepper motors with microstepping as well 
+ * @brief This is the library for the Adafruit Motor Shield V2 for Arduino.
+ * It supports DC motors & Stepper motors with microstepping as well
  * as stacking-support. It is *not* compatible with the V1 library!
  * @version 1.1.0
  * @date 2022-01-30
- * 
+ *
  * @copyright Copyright (c) 2022
- * 
+ *
  */
 
 /******************************************************************
@@ -34,6 +34,8 @@
 #include "i2cbus/i2cbus.h"
 #include "gpiodev/gpiodev.h"
 
+#include "clkgen.h"
+
 #include <mutex>
 #include <list>
 
@@ -42,7 +44,7 @@ namespace Adafruit
 #if !defined(ADAFRUIT_MOTORSHIELD_DEBUG)
 /**
  * @brief Enable debug printouts for motor shield.
- * 
+ *
  */
 #define ADAFRUIT_MOTORSHIELD_DEBUG 0
 #ifndef MEB_DBGLVL
@@ -78,14 +80,14 @@ namespace Adafruit
 
     /**
      * @brief Object that controls and keeps state for a single DC motor.
-     * 
+     *
      */
     class DCMotor
     {
     private:
         /**
          * @brief Create an uninitialized DCMotor object.
-         * 
+         *
          */
         DCMotor(void);
 
@@ -94,34 +96,34 @@ namespace Adafruit
 
         /**
          * @brief Control the DC Motor direction and action.
-         * 
+         *
          * @param cmd The action to perform, can be FORWARD, BACKWARD or RELEASE.
          */
         void run(MotorDir cmd);
 
         /**
          * @brief Control the DC Motor speed/throttle.
-         * 
+         *
          * @param speed The 8-bit PWM value, 0 is off, 255 is on.
          */
         void setSpeed(uint8_t speed);
 
         /**
          * @brief Control the DC Motor speed/throttle at 12 bit resolution.
-         * 
+         *
          * @param speed The 12-bit PWM value, 0 (full off) to 4095 (full on).
          */
         void setSpeedFine(uint16_t speed);
 
         /**
          * @brief Turn the motor off completely.
-         * 
+         *
          */
         void fullOff(void);
 
         /**
          * @brief Turn the motor on at full speed.
-         * 
+         *
          */
         void fullOn(void);
 
@@ -131,23 +133,32 @@ namespace Adafruit
         bool initd;
     };
 
+    class StepperMotor;
+    struct StepperMotorTimerData
+    {
+        StepperMotor *_this;
+        uint16_t steps;
+        MotorDir dir;
+        MotorStyle style;
+    };
+
     /**
      * @brief Object that controls and keeps state for a single stepper motor.
-     * 
+     *
      */
     class StepperMotor
     {
     protected:
         /**
          * @brief Create an uninitialized StepperMotor object.
-         * 
+         *
          */
         StepperMotor(void);
 
     public:
         /**
          * @brief Set the delay for the Stepper Motor speed in RPM.
-         * 
+         *
          * @param rpm The desired RPM, it is not guaranteed to be achieved.
          */
         void setSpeed(uint16_t rpm);
@@ -155,7 +166,7 @@ namespace Adafruit
         /**
          * @brief Move the stepper motor with the given RPM speed,
          * don't forget to call {@link Adafruit::StepperMotor::setSpeed} to set the speed!
-         * 
+         *
          * @param steps Number of steps to move.
          * @param dir The direction of movement, can be FORWARD or BACKWARD.
          * @param style Stepping style, can be SINGLE, DOUBLE, INTERLEAVE or MICROSTEP.
@@ -164,25 +175,25 @@ namespace Adafruit
 
         /**
          * @brief Move the stepper motor by one step. No delays implemented.
-         * 
+         *
          * @param dir The direction of movement, can be FORWARD or BACKWARD.
          * @param style Stepping style, can be SINGLE, DOUBLE, INTERLEAVE or MICROSTEP.
-         * @return uint8_t The current step/microstep index, useful for 
-         * Adafruit_StepperMotor.step to keep track of the current 
+         * @return uint8_t The current step/microstep index, useful for
+         * Adafruit_StepperMotor.step to keep track of the current
          * location, especially when microstepping.
          */
         uint8_t onestep(MotorDir dir, MotorStyle style);
 
         /**
          * @brief Set microsteps per step.
-         * 
+         *
          * @param microsteps MicroSteps::STEP8 or MicroSteps::STEP16.
          */
         void setStep(MicroSteps microsteps);
 
         /**
          * @brief Release all pins of the stepper motor so it free-spins.
-         * 
+         *
          */
         void release(void);
 
@@ -201,11 +212,19 @@ namespace Adafruit
         uint8_t currentstep;
         MotorShield *MC;
         bool initd;
+        time_handler stepHandler;
+        static void stepHandlerFn(clkgen_t clk, void *data_)
+        {
+            struct StepperMotorTimerData *data = (struct StepperMotorTimerData *)data_;
+            StepperMotor *_this = data->_this;
+            data->steps--;
+            _this->onestep(data->dir, data->style);
+        }
     };
 
     /**
      * @brief Structure describing a limit switch
-     * 
+     *
      */
     class LimitSW
     {
@@ -217,7 +236,7 @@ namespace Adafruit
 
         /**
          * @brief Create a new empty limit switch object.
-         * 
+         *
          */
         LimitSW()
         {
@@ -229,7 +248,7 @@ namespace Adafruit
 
         /**
          * @brief Create a new limit switch object with properties.
-         * 
+         *
          * @param p Limit SW position.
          * @param d Direction from origin.
          * @param pin GPIO pin.
@@ -245,7 +264,7 @@ namespace Adafruit
 
         /**
          * @brief Assignment operator
-         * 
+         *
          * @param rhs Reference to LimitSW object
          */
         void operator=(const LimitSW &rhs)
@@ -256,9 +275,9 @@ namespace Adafruit
 
         /**
          * @brief Comparison operator
-         * 
-         * @param lhs 
-         * @param rhs 
+         *
+         * @param lhs
+         * @param rhs
          * @return bool true if lhs.pos < rhs.pos, else false
          */
         friend bool operator<(const LimitSW &lhs,
@@ -270,14 +289,14 @@ namespace Adafruit
 
     /**
      * @brief Object that controls and keeps state for a single stepper motor, with advanced location tracking and limit switch support.
-     * 
+     *
      */
     class StepperMotorA : public StepperMotor
     {
     private:
         /**
          * @brief Create an uninitialized StepperMotorA object.
-         * 
+         *
          */
         StepperMotorA(void);
 
@@ -286,7 +305,7 @@ namespace Adafruit
 
         /**
          * @brief Set the state of the stepper motor
-         * 
+         *
          * @param origin Origin of coordinate system
          * @param currentPos Current position of motor
          * @param sw1 Limit switch 1
@@ -298,14 +317,14 @@ namespace Adafruit
 
         /**
          * @brief Return motor to origin
-         * 
+         *
          * @return int Location of origin
          */
         int goHome();
 
         /**
          * @brief Step motor to destination
-         * 
+         *
          * @param loc Destination
          * @param style MotorStyle
          * @return int End location
@@ -314,21 +333,21 @@ namespace Adafruit
 
         /**
          * @brief Get the origin of the motor
-         * 
-         * @return int 
+         *
+         * @return int
          */
         int getOrigin() const { return origin; }
 
         /**
          * @brief Get the current position of the motor
-         * 
-         * @return int 
+         *
+         * @return int
          */
         int getCurrentPos() const { return currentPos; }
 
         /**
          * @brief Stops the motor if stepping.
-         * 
+         *
          */
         void stopMotor() { stopnow = true; }
 
@@ -345,14 +364,14 @@ namespace Adafruit
     /**
      * @brief Object to control and maintain state for the entire motor shield.
      * Use this class to create DC and Stepper motor objects.
-     * 
+     *
      */
     class MotorShield
     {
     public:
         /**
          * @brief Create the Motor Shield object at an I2C address (default: 0x60) on an I2C bus (default: 1).
-         * 
+         *
          * @param addr Optional, default: 0x60
          * @param bus Optional, default: 1
          */
@@ -360,14 +379,14 @@ namespace Adafruit
 
         /**
          * @brief Release all motors and the I2C Bus.
-         * 
+         *
          */
         ~MotorShield();
 
         /**
          * @brief Initialize the I2C hardware and PWM driver, then turn off all pins.
-         * 
-         * @param freq The PWM frequency for the driver, used for speed control and microstepping. 
+         *
+         * @param freq The PWM frequency for the driver, used for speed control and microstepping.
          * By default we use 1600 Hz which is a little audible but efficient.
          * @return bool true on success, false on failure
          */
@@ -376,19 +395,19 @@ namespace Adafruit
         /**
          * @brief Mini factory that will return a pointer to an already-allocated
          * Adafruit_DCMotor object. Initializes the DC motor and turns off all pins.
-         * 
+         *
          * @param n The DC motor port we want to use: 1 thru 4 are valid
          * @return Adafruit_DCMotor* NULL on error, valid pointer on success
          */
         DCMotor *getMotor(uint8_t n);
 
         /**
-         * @brief  Mini factory that will return a pointer to an already-allocated 
-         * Adafruit_StepperMotor object with a given 'steps per rotation. 
+         * @brief  Mini factory that will return a pointer to an already-allocated
+         * Adafruit_StepperMotor object with a given 'steps per rotation.
          * Then initializes the stepper motor and turns off all pins.
-         * 
+         *
          * @param steps How many steps per revolution (used for RPM calculation)
-         * @param port The stepper motor port we want to use: only 1 or 2 are valid 
+         * @param port The stepper motor port we want to use: only 1 or 2 are valid
          * @return Adafruit_StepperMotor* NULL on error, valid pointer on success
          */
         StepperMotor *getStepper(uint16_t steps, uint8_t port, MicroSteps microsteps = STEP16);
@@ -397,7 +416,7 @@ namespace Adafruit
 
         /**
          * @brief Helper that sets the PWM output on a pin and manages 'all on or off'.
-         * 
+         *
          * @param pin The PWM output on the driver that we want to control (0-15)
          * @param val The 12-bit PWM value we want to set (0-4095) - 4096 is a special 'all on' value.
          * @return bool true on success, false on failure
@@ -406,7 +425,7 @@ namespace Adafruit
 
         /**
          * @brief Helper that sets the PWM output on a pin as if it were a GPIO.
-         * 
+         *
          * @param pin The PWM output on the driver that we want to control (0-15).
          * @param val HIGH or LOW for pin setting.
          * @return bool true on success, false on failure
