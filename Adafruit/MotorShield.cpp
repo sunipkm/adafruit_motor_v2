@@ -2,7 +2,7 @@
  * @file MotorShield.cpp
  *
  * @mainpage Adafruit Motor Shield v2 Driver for Linux
- * 
+ *
  * @section intro_sec Introduction
  *
  * This is the library for the Adafruit Motor Shield V2 for Linux.
@@ -376,10 +376,13 @@ namespace Adafruit
         StepperMotorTimerData data = {this, steps, dir, style};
         clkgen_t clk = create_clk(uspers * 1000LLU, stepHandlerFn, &data);
         usleep(uspers * steps);
-        while (data.steps);
+        while (data.steps)
+        {
+            tprintlf("After sleep: %u", data.steps);
+            usleep(uspers);
+        }
         destroy_clk(clk);
     }
-
 
     uint8_t StepperMotor::onestep(MotorDir dir, MotorStyle style)
     {
