@@ -212,13 +212,14 @@ namespace Adafruit
         uint8_t currentstep;
         MotorShield *MC;
         bool initd;
-        time_handler stepHandler;
         static void stepHandlerFn(clkgen_t clk, void *data_)
         {
             struct StepperMotorTimerData *data = (struct StepperMotorTimerData *)data_;
             StepperMotor *_this = data->_this;
-            data->steps--;
-            _this->onestep(data->dir, data->style);
+            while (data->steps--)
+                _this->onestep(data->dir, data->style);
+            if (data->steps == 0)
+                destroy_clk(clk);
         }
     };
 

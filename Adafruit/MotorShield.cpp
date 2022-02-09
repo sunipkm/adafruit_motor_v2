@@ -315,7 +315,6 @@ namespace Adafruit
         microsteps = STEP16;
         initd = false;
         microstepcurve = nullptr;
-        stepHandler = nullptr;
     }
 
     void StepperMotor::setSpeed(uint16_t rpm)
@@ -373,14 +372,12 @@ namespace Adafruit
             steps *= microsteps;
             dbprintlf("steps = %d", steps);
         }
-        if (stepHandler == nullptr)
-            stepHandler = (time_handler) &stepHandlerFn;
 
         StepperMotorTimerData data = {this, steps, dir, style};
-        clkgen_t clk = create_clk(uspers * 1000LLU, stepHandler, &data);
+        clkgen_t clk = create_clk(uspers * 1000LLU, stepHandlerFn, &data);
         usleep(uspers * steps);
-        while (data.steps);
-        destroy_clk(clk);
+        // while (data.steps);
+        // destroy_clk(clk);
     }
 
 
