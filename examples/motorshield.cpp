@@ -22,14 +22,14 @@ int main()
     // 200 steps per rev (1.8 deg) on port 2 (M3 and M4)
     Adafruit::StepperMotor *motor = AFMS.getStepper(200, 2, Adafruit::MicroSteps::STEP64); // Sets it to 64 step mode.
     printf("Starting revolution at 1 RPM, press Ctrl + C to exit\n");
-    motor->setSpeed(1); // 
+    motor->setSpeed(1); // 100 rpm
     // FORWARD == LS 2 (increase in wavelength)
     // BACKWARD == LS 1 (decrease in wavelength)
     float num_rev = 0;
     uint64_t told = get_ts_now(), tnow = 0;
     while (!done)
     {
-        motor->step(1, state, Adafruit::MotorStyle::DOUBLE); // double coil, one full rotation
+        motor->step(1, state, Adafruit::MotorStyle::MICROSTEP); // double coil, one full rotation
         tnow = get_ts_now();
         printf("Performed %.3f rotations in %.3f ms\n", (++num_rev) / 200, (tnow - told) * 0.001);
         told = tnow;
