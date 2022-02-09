@@ -70,7 +70,8 @@ namespace Adafruit
     typedef enum _MicroSteps : uint8_t
     {
         STEP8 = 8,
-        STEP16 = 16
+        STEP16 = 16,
+        STEP64 = 64
     } MicroSteps;
 
     class MotorShield;

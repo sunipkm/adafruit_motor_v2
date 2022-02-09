@@ -49,6 +49,8 @@ namespace Adafruit
     static uint8_t microstepcurve16[] = {0, 25, 50, 74, 98, 120, 141, 162, 180,
                                          197, 212, 225, 236, 244, 250, 253, 255};
 
+    static uint8_t microstepcurve64[] = {0, 6, 12, 18, 24, 31, 37, 43, 49, 55, 61, 68, 74, 79, 85, 91, 97, 103, 109, 114, 120, 125, 131, 136, 141, 146, 151, 156, 161, 166, 171, 175, 180, 184, 188, 193, 197, 201, 204, 208, 212, 215, 218, 221, 224, 227, 230, 233, 235, 237, 240, 242, 244, 245, 247, 248, 250, 251, 252, 253, 253, 254, 254, 254, 255};
+
     MotorShield::MotorShield(uint8_t addr, int bus)
     {
         _addr = addr;
@@ -202,6 +204,10 @@ namespace Adafruit
             {
                 steppers[port].microstepcurve = microstepcurve16;
             }
+            else if (microsteps == STEP64)
+            {
+                steppers[port].microstepcurve = microstepcurve64;
+            }
             else
             {
                 dbprintlf("Microsteps %u not valid, setting microsteps to %u", (uint8_t)microsteps, (uint8_t)STEP16);
@@ -338,6 +344,11 @@ namespace Adafruit
         {
             this->microsteps = microsteps;
             microstepcurve = microstepcurve16;
+        }
+        else if (microsteps == STEP64)
+        {
+            this->microsteps = microsteps;
+            microstepcurve = microstepcurve64;
         }
         else
         {
