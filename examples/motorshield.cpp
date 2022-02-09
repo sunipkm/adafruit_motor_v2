@@ -25,15 +25,18 @@ int main()
     motor->setSpeed(1); // 100 rpm
     // FORWARD == LS 2 (increase in wavelength)
     // BACKWARD == LS 1 (decrease in wavelength)
-    float num_rev = 0;
+    // float num_rev = 0;
     uint64_t told = get_ts_now(), tnow = 0;
-    while (!done)
-    {
-        motor->step(1, state, Adafruit::MotorStyle::MICROSTEP); // double coil, one full rotation
-        tnow = get_ts_now();
-        printf("Performed %.3f rotations in %.3f ms\n", (++num_rev) / 200, (tnow - told) * 0.001);
-        told = tnow;
-    }
+    // while (!done)
+    // {
+
+    motor->step(200, state, Adafruit::MotorStyle::MICROSTEP); // double coil, one full rotation
+    tnow = get_ts_now();
+    // printf("Performed %.3f rotations in %.3f ms\n", (++num_rev) / 200, (tnow - told) * 0.001);
+    uint64_t tdelta = tnow - told;
+    printf("Took %llu microseconds (%.02lf seconds).", tdelta, tdelta / 1e6);
+    
+    // }
     motor->release();
     printf("\n\n");
 }
