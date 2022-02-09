@@ -35,7 +35,6 @@
 #include "gpiodev/gpiodev.h"
 
 #include "clkgen.h"
-#include "meb_print.h"
 
 #include <mutex>
 #include <list>
@@ -54,6 +53,8 @@ namespace Adafruit
 #elif ADAFRUIT_MOTORSHIELD_DEBUG > 0
 #define MEB_DBGLVL MEB_DBG_ALL
 #endif // ADAFURUIT_MOTORSHIELD_DEBUG
+#define MEB_DBGLVL MEB_DBG_TPRINT
+#include "meb_print.h"
     typedef enum _MotorStyle : uint8_t
     {
         SINGLE = 1,
@@ -220,7 +221,7 @@ namespace Adafruit
             while (data->steps--)
                 _this->onestep(data->dir, data->style);
             if (data->steps == 0)
-                dbprintlf("Reached end of steps");
+                tprintlf("Reached end of steps");
         }
     };
 
