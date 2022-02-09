@@ -378,7 +378,6 @@ namespace Adafruit
         usleep(uspers * steps);
         while (data.steps)
         {
-            tprintlf("After sleep: %u", data.steps);
             usleep(uspers);
         }
         destroy_clk(clk);

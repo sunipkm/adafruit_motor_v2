@@ -53,8 +53,7 @@ namespace Adafruit
 #elif ADAFRUIT_MOTORSHIELD_DEBUG > 0
 #define MEB_DBGLVL MEB_DBG_ALL
 #endif // ADAFURUIT_MOTORSHIELD_DEBUG
-#define MEB_DBGLVL MEB_DBG_TPRINT
-#include "meb_print.h"
+
     typedef enum _MotorStyle : uint8_t
     {
         SINGLE = 1,
