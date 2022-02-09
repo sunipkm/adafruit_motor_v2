@@ -218,7 +218,7 @@ namespace Adafruit
         {
             struct StepperMotorTimerData *data = (struct StepperMotorTimerData *)data_;
             StepperMotor *_this = data->_this;
-            while (data->steps)
+            if (data->steps)
             {
                 _this->onestep(data->dir, data->style);
                 data->steps--;

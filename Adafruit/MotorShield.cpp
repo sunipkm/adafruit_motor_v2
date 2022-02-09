@@ -360,7 +360,7 @@ namespace Adafruit
 
     void StepperMotor::step(uint16_t steps, MotorDir dir, MotorStyle style)
     {
-        uint32_t uspers = usperstep;
+        uint64_t uspers = usperstep;
 
         if (style == INTERLEAVE)
         {
