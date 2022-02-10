@@ -215,7 +215,7 @@ namespace Adafruit
         uint8_t PWMApin, AIN1pin, AIN2pin;
         uint8_t PWMBpin, BIN1pin, BIN2pin;
         uint16_t revsteps; // # steps per revolution
-        uint8_t currentstep;
+        uint16_t currentstep;
         MotorShield *MC;
         bool initd;
         volatile sig_atomic_t *done;
