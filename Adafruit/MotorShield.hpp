@@ -78,7 +78,8 @@ namespace Adafruit
         STEP32 = 32,
         STEP64 = 64,
         STEP128 = 128,
-        STEP256 = 256
+        STEP256 = 256,
+        STEP512 = 512
     } MicroSteps;
 
     class MotorShield;
