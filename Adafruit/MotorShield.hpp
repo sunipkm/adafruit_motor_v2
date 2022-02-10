@@ -31,12 +31,13 @@
 #define _MotorShield_hpp_
 
 #include <stdint.h>
+#include <signal.h>
 #include "i2cbus/i2cbus.h"
 #include "gpiodev/gpiodev.h"
-
 #include "clkgen.h"
 
 #include <mutex>
+#include <condition_variable>
 #include <list>
 
 namespace Adafruit
@@ -206,6 +207,7 @@ namespace Adafruit
 
     private:
         std::mutex cs;
+        std::condition_variable cond;
         uint8_t *microstepcurve;
         uint8_t PWMApin, AIN1pin, AIN2pin;
         uint8_t PWMBpin, BIN1pin, BIN2pin;
@@ -213,14 +215,19 @@ namespace Adafruit
         uint8_t currentstep;
         MotorShield *MC;
         bool initd;
+        volatile sig_atomic_t *done;
         static void stepHandlerFn(clkgen_t clk, void *data_)
         {
             struct StepperMotorTimerData *data = (struct StepperMotorTimerData *)data_;
             StepperMotor *_this = data->_this;
-            if (data->steps)
+            if (data->steps && !(*(_this->done)))
             {
                 _this->onestep(data->dir, data->style);
                 data->steps--;
+            }
+            if (data->steps == 0 || (*(_this->done)))
+            {
+                _this->cond.notify_all();
             }
         }
     };

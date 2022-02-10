@@ -41,6 +41,13 @@
 #define LOW 0
 #define HIGH 1
 
+volatile sig_atomic_t ms_done = 0;
+
+void sigHandler(int sig)
+{
+    ms_done = 1;
+}
+
 namespace Adafruit
 {
     static uint8_t microstepcurve8[] = {0, 50, 98, 142, 180, 212, 236, 250, 255};
@@ -56,6 +63,7 @@ namespace Adafruit
         _addr = addr;
         _bus = bus;
         initd = false;
+        signal(SIGINT, sigHandler);
     }
 
     MotorShield::~MotorShield()
@@ -315,6 +323,7 @@ namespace Adafruit
         microsteps = STEP16;
         initd = false;
         microstepcurve = nullptr;
+        done = &ms_done;
     }
 
     void StepperMotor::setSpeed(double rpm)
@@ -360,6 +369,7 @@ namespace Adafruit
 
     void StepperMotor::step(uint16_t steps, MotorDir dir, MotorStyle style)
     {
+        std::unique_lock<std::mutex> lock(cs);
         uint64_t uspers = usperstep;
 
         if (style == INTERLEAVE)
@@ -375,17 +385,18 @@ namespace Adafruit
 
         StepperMotorTimerData data = {this, steps, dir, style};
         clkgen_t clk = create_clk(uspers * 1000LLU, stepHandlerFn, &data);
-        usleep(uspers * steps);
-        while (data.steps)
+        if (cond.wait_for(lock, std::chrono::microseconds(steps * uspers)) == std::cv_status::timeout)
         {
-            usleep(uspers);
+            while (data.steps)
+            {
+                usleep(uspers);
+            }
         }
         destroy_clk(clk);
     }
 
     uint8_t StepperMotor::onestep(MotorDir dir, MotorStyle style)
     {
-        std::lock_guard<std::mutex> lock(cs);
         uint8_t ocrb, ocra;
 
         ocra = ocrb = 255;
