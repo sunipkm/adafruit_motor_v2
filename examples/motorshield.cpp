@@ -21,8 +21,9 @@ int main()
     AFMS.begin();
     // 200 steps per rev (1.8 deg) on port 2 (M3 and M4)
     Adafruit::StepperMotor *motor = AFMS.getStepper(200, 2, Adafruit::MicroSteps::STEP64); // Sets it to 64 step mode.
-    printf("Starting revolution at 1 RPM, press Ctrl + C to exit\n");
-    motor->setSpeed(1); // 100 rpm
+    double rpm = 0.3;
+    printf("Starting revolution at %.3lf RPM, press Ctrl + C to exit\n", rpm);
+    motor->setSpeed(rpm); // 100 rpm
     // FORWARD == LS 2 (increase in wavelength)
     // BACKWARD == LS 1 (decrease in wavelength)
     // float num_rev = 0;

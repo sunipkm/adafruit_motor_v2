@@ -164,7 +164,7 @@ namespace Adafruit
         /**
          * @brief Set the delay for the Stepper Motor speed in RPM.
          *
-         * @param rpm The desired RPM, it is not guaranteed to be achieved.
+         * @param rpm The desired RPM, it is not guaranteed to be achieved. In double coil mode upto ~68 RPM is achieved for a 200 steps/rev stepper, in microstep mode ~1.25 RPM is achieved for a 200 steps/rev stepper at STEP64 setting, ~0.3125 RPM at STEP256 setting.
          */
         void setSpeed(double rpm);
 
