@@ -50,13 +50,61 @@ void sigHandler(int sig)
 
 namespace Adafruit
 {
-    static uint8_t microstepcurve8[] = {0, 50, 98, 142, 180, 212, 236, 250, 255};
+    static uint16_t microstepcurve8[] = {0, 798, 1567, 2275, 2895, 3404, 3783, 4016, 4095};
     ///< A sinusoial microstepping curve for the PWM output (8-bit range) with 17
     ///< points - last one is start of next step.
-    static uint8_t microstepcurve16[] = {0, 25, 50, 74, 98, 120, 141, 162, 180,
-                                         197, 212, 225, 236, 244, 250, 253, 255};
+    static uint16_t microstepcurve16[] = {0, 401, 798, 1188, 1567, 1930, 2275, 2597, 2895, 3165, 3404,
+                                          3611, 3783, 3918, 4016, 4075, 4095};
 
-    static uint8_t microstepcurve64[] = {0, 6, 12, 18, 24, 31, 37, 43, 49, 55, 61, 68, 74, 79, 85, 91, 97, 103, 109, 114, 120, 125, 131, 136, 141, 146, 151, 156, 161, 166, 171, 175, 180, 184, 188, 193, 197, 201, 204, 208, 212, 215, 218, 221, 224, 227, 230, 233, 235, 237, 240, 242, 244, 245, 247, 248, 250, 251, 252, 253, 253, 254, 254, 254, 255};
+    static uint16_t microstepcurve32[] = {0, 200, 401, 600, 798, 995, 1188, 1379, 1567, 1750, 1930,
+                                          2105, 2275, 2439, 2597, 2750, 2895, 3034, 3165, 3289, 3404, 3512,
+                                          3611, 3701, 3783, 3855, 3918, 3972, 4016, 4050, 4075, 4090, 4095};
+
+    static uint16_t microstepcurve64[] = {0, 100, 200, 301, 401, 501, 600, 700, 798, 897, 995,
+                                          1092, 1188, 1284, 1379, 1473, 1567, 1659, 1750, 1841, 1930, 2018,
+                                          2105, 2190, 2275, 2357, 2439, 2519, 2597, 2674, 2750, 2823, 2895,
+                                          2965, 3034, 3100, 3165, 3228, 3289, 3348, 3404, 3459, 3512, 3563,
+                                          3611, 3657, 3701, 3743, 3783, 3820, 3855, 3888, 3918, 3946, 3972,
+                                          3995, 4016, 4034, 4050, 4064, 4075, 4083, 4090, 4093, 4095};
+
+    static uint16_t microstepcurve128[] = {0, 50, 100, 150, 200, 251, 301, 351, 401, 451, 501,
+                                           551, 600, 650, 700, 749, 798, 848, 897, 946, 995, 1043,
+                                           1092, 1140, 1188, 1236, 1284, 1332, 1379, 1426, 1473, 1520, 1567,
+                                           1613, 1659, 1705, 1750, 1796, 1841, 1885, 1930, 1974, 2018, 2061,
+                                           2105, 2148, 2190, 2233, 2275, 2316, 2357, 2398, 2439, 2479, 2519,
+                                           2558, 2597, 2636, 2674, 2712, 2750, 2787, 2823, 2859, 2895, 2930,
+                                           2965, 3000, 3034, 3067, 3100, 3133, 3165, 3197, 3228, 3258, 3289,
+                                           3318, 3348, 3376, 3404, 3432, 3459, 3486, 3512, 3537, 3563, 3587,
+                                           3611, 3634, 3657, 3680, 3701, 3723, 3743, 3763, 3783, 3802, 3820,
+                                           3838, 3855, 3872, 3888, 3903, 3918, 3932, 3946, 3959, 3972, 3984,
+                                           3995, 4006, 4016, 4025, 4034, 4042, 4050, 4057, 4064, 4070, 4075,
+                                           4079, 4083, 4087, 4090, 4092, 4093, 4094, 4095};
+
+    static uint16_t microstepcurve256[] = {
+        0, 25, 50, 75, 100, 125, 150, 175, 200, 226, 251,
+        276, 301, 326, 351, 376, 401, 426, 451, 476, 501, 526,
+        551, 575, 600, 625, 650, 675, 700, 724, 749, 774, 798,
+        823, 848, 872, 897, 921, 946, 970, 995, 1019, 1043, 1067,
+        1092, 1116, 1140, 1164, 1188, 1212, 1236, 1260, 1284, 1308, 1332,
+        1355, 1379, 1403, 1426, 1450, 1473, 1497, 1520, 1543, 1567, 1590,
+        1613, 1636, 1659, 1682, 1705, 1728, 1750, 1773, 1796, 1818, 1841,
+        1863, 1885, 1908, 1930, 1952, 1974, 1996, 2018, 2040, 2061, 2083,
+        2105, 2126, 2148, 2169, 2190, 2212, 2233, 2254, 2275, 2295, 2316,
+        2337, 2357, 2378, 2398, 2419, 2439, 2459, 2479, 2499, 2519, 2539,
+        2558, 2578, 2597, 2617, 2636, 2655, 2674, 2693, 2712, 2731, 2750,
+        2768, 2787, 2805, 2823, 2841, 2859, 2877, 2895, 2913, 2930, 2948,
+        2965, 2983, 3000, 3017, 3034, 3051, 3067, 3084, 3100, 3117, 3133,
+        3149, 3165, 3181, 3197, 3212, 3228, 3243, 3258, 3274, 3289, 3304,
+        3318, 3333, 3348, 3362, 3376, 3390, 3404, 3418, 3432, 3446, 3459,
+        3473, 3486, 3499, 3512, 3525, 3537, 3550, 3563, 3575, 3587, 3599,
+        3611, 3623, 3634, 3646, 3657, 3668, 3680, 3691, 3701, 3712, 3723,
+        3733, 3743, 3753, 3763, 3773, 3783, 3792, 3802, 3811, 3820, 3829,
+        3838, 3847, 3855, 3864, 3872, 3880, 3888, 3896, 3903, 3911, 3918,
+        3925, 3932, 3939, 3946, 3953, 3959, 3966, 3972, 3978, 3984, 3989,
+        3995, 4000, 4006, 4011, 4016, 4021, 4025, 4030, 4034, 4038, 4042,
+        4046, 4050, 4054, 4057, 4061, 4064, 4067, 4070, 4072, 4075, 4077,
+        4079, 4081, 4083, 4085, 4087, 4088, 4090, 4091, 4092, 4093, 4093,
+        4094, 4094, 4094, 4095};
 
     MotorShield::MotorShield(uint8_t addr, int bus)
     {
@@ -204,24 +252,28 @@ namespace Adafruit
             steppers[port].revsteps = steps;
             steppers[port].MC = this;
             steppers[port].microsteps = microsteps;
-            if (microsteps == STEP8)
-            {
-                steppers[port].microstepcurve = microstepcurve8;
-            }
-            else if (microsteps == STEP16)
-            {
-                steppers[port].microstepcurve = microstepcurve16;
-            }
-            else if (microsteps == STEP64)
-            {
-                steppers[port].microstepcurve = microstepcurve64;
-            }
-            else
-            {
-                dbprintlf("Microsteps %u not valid, setting microsteps to %u", (uint8_t)microsteps, (uint8_t)STEP16);
-                steppers[port].microsteps = STEP16;
-                steppers[port].microstepcurve = microstepcurve16;
-            }
+            switch (microsteps)
+        {
+#define MCASE(x)                            \
+    case (STEP##x):                         \
+        steppers[port].microsteps = STEP##x;         \
+        steppers[port].microstepcurve = microstepcurve##x; \
+        break;
+
+            MCASE(8)
+            MCASE(16)
+            MCASE(32)
+            MCASE(64)
+            MCASE(128)
+            MCASE(256)
+#undef MCASE
+
+        default:
+            dbprintlf("Microsteps %u not valid, setting microsteps to %u", (uint8_t)microsteps, (uint8_t)STEP16);
+            steppers[port].microsteps = STEP16;
+            steppers[port].microstepcurve = microstepcurve16;
+            break;
+        }
             uint8_t pwma = 8, pwmb = 13, ain1 = 9, ain2 = 10, bin1 = 11, bin2 = 12;
             if (port == 0)
             {
@@ -344,26 +396,28 @@ namespace Adafruit
     void StepperMotor::setStep(MicroSteps microsteps)
     {
         std::lock_guard<std::mutex> lock(cs);
-        if (microsteps == STEP8)
+
+        switch (microsteps)
         {
-            this->microsteps = microsteps;
-            microstepcurve = microstepcurve8;
-        }
-        else if (microsteps == STEP16)
-        {
-            this->microsteps = microsteps;
-            microstepcurve = microstepcurve16;
-        }
-        else if (microsteps == STEP64)
-        {
-            this->microsteps = microsteps;
-            microstepcurve = microstepcurve64;
-        }
-        else
-        {
+#define MCASE(x)                            \
+    case (STEP##x):                         \
+        this->microsteps = STEP##x;         \
+        microstepcurve = microstepcurve##x; \
+        break;
+
+            MCASE(8)
+            MCASE(16)
+            MCASE(32)
+            MCASE(64)
+            MCASE(128)
+            MCASE(256)
+#undef MCASE
+
+        default:
             dbprintlf("Microsteps %u not valid, setting microsteps to %u", (uint8_t)microsteps, (uint8_t)STEP16);
             this->microsteps = STEP16;
             microstepcurve = microstepcurve16;
+            break;
         }
     }
 
@@ -397,9 +451,9 @@ namespace Adafruit
 
     uint8_t StepperMotor::onestep(MotorDir dir, MotorStyle style)
     {
-        uint8_t ocrb, ocra;
+        uint16_t ocrb, ocra;
 
-        ocra = ocrb = 255;
+        ocra = ocrb = 4095;
 
         // next determine what sort of stepping procedure we're up to
         if (style == SINGLE)
@@ -508,8 +562,8 @@ namespace Adafruit
         currentstep %= microsteps * 4;
 
         dbprintlf("current step: %u, pwmA = %u, pwmB = %u", currentstep, ocra, ocrb);
-        MC->setPWM(PWMApin, ocra * 16);
-        MC->setPWM(PWMBpin, ocrb * 16);
+        MC->setPWM(PWMApin, ocra);
+        MC->setPWM(PWMBpin, ocrb);
 
         // release all
         uint8_t latch_state = 0; // all motor pins to 0

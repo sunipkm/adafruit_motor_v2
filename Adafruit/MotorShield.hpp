@@ -49,7 +49,7 @@ namespace Adafruit
  */
 #define ADAFRUIT_MOTORSHIELD_DEBUG 0
 #ifndef MEB_DBGLVL
-#define MEB_DBGLVL 3
+#define MEB_DBGLVL 0
 #endif // MEB_DBGLVL
 #elif ADAFRUIT_MOTORSHIELD_DEBUG > 0
 #define MEB_DBGLVL MEB_DBG_ALL
@@ -71,11 +71,14 @@ namespace Adafruit
         RELEASE = 4
     } MotorDir;
 
-    typedef enum _MicroSteps : uint8_t
+    typedef enum _MicroSteps : uint16_t
     {
         STEP8 = 8,
         STEP16 = 16,
-        STEP64 = 64
+        STEP32 = 32,
+        STEP64 = 64,
+        STEP128 = 128,
+        STEP256 = 256
     } MicroSteps;
 
     class MotorShield;
@@ -208,7 +211,7 @@ namespace Adafruit
     private:
         std::mutex cs;
         std::condition_variable cond;
-        uint8_t *microstepcurve;
+        uint16_t *microstepcurve;
         uint8_t PWMApin, AIN1pin, AIN2pin;
         uint8_t PWMBpin, BIN1pin, BIN2pin;
         uint16_t revsteps; // # steps per revolution
