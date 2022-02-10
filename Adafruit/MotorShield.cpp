@@ -317,9 +317,9 @@ namespace Adafruit
         microstepcurve = nullptr;
     }
 
-    void StepperMotor::setSpeed(uint16_t rpm)
+    void StepperMotor::setSpeed(double rpm)
     {
-        usperstep = 60000000 / ((uint32_t)revsteps * (uint32_t)rpm);
+        usperstep = 60000000ULL / ((uint32_t)revsteps * rpm);
     }
 
     void StepperMotor::release(void)

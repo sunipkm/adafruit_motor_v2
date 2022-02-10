@@ -162,7 +162,7 @@ namespace Adafruit
          *
          * @param rpm The desired RPM, it is not guaranteed to be achieved.
          */
-        void setSpeed(uint16_t rpm);
+        void setSpeed(double rpm);
 
         /**
          * @brief Move the stepper motor with the given RPM speed,
@@ -201,7 +201,7 @@ namespace Adafruit
         friend class MotorShield; ///< Let MotorShield create StepperMotors
 
     protected:
-        uint32_t usperstep;
+        uint64_t usperstep;
         MicroSteps microsteps;
 
     private:
