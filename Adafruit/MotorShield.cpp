@@ -392,12 +392,7 @@ namespace Adafruit
                 usleep(uspers);
             }
         }
-        else
-        {
-            tprintf("Received cond, steps %u", data.steps);
-        }
         destroy_clk(clk);
-        tprintf("Destroyed clock");
     }
 
     uint8_t StepperMotor::onestep(MotorDir dir, MotorStyle style)

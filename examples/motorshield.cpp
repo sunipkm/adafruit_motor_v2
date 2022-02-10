@@ -38,5 +38,5 @@ int main()
     
     // }
     motor->release();
-    printf("\n\n");
+    printf("\n\nExiting\n");
 }
