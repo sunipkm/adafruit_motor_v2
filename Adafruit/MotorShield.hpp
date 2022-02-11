@@ -171,7 +171,7 @@ namespace Adafruit
 
         /**
          * @brief Move the stepper motor with the given RPM speed,
-         * don't forget to call {@link Adafruit::StepperMotor::setSpeed} to set the speed!
+         * at the speed set using {@link Adafruit::StepperMotor::setSpeed}.
          *
          * @param steps Number of steps to move.
          * @param dir The direction of movement, can be FORWARD or BACKWARD.
@@ -303,6 +303,8 @@ namespace Adafruit
 
     /**
      * @brief Object that controls and keeps state for a single stepper motor, with advanced location tracking and limit switch support.
+     * This motor however does not support the precise timing of provided by the {@link Adafruit::StepperMotor::step()} function in the 
+     * {@link Adafruit::StepperMotor} class.
      *
      */
     class StepperMotorA : public StepperMotor
@@ -372,7 +374,7 @@ namespace Adafruit
             sw2,
             estop;
         volatile bool stopnow;
-        void moveSteps(int steps, MotorDir dir, bool ignoreSW, MotorStyle style);
+        void moveSteps(uint32_t steps, MotorDir dir, bool ignoreSW, MotorStyle style);
     };
 
     /**
