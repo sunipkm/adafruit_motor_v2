@@ -38,6 +38,7 @@
 
 #include <algorithm>
 
+#ifndef _DOXYGEN_
 #define LOW 0
 #define HIGH 1
 
@@ -47,19 +48,37 @@ void sigHandler(int sig)
 {
     ms_done = 1;
 }
+#endif // _DOXYGEN_
 
 namespace Adafruit
 {
+    /**
+     * @brief Sinusoidal microstepping curve (sine curve between 0 and pi/2) 
+     * for the PWM output (12-bit range), with n + 1 points (in this case, n = 8). 
+     * The last point is the beginning of the next step.
+     * 
+     */
     static uint16_t microstepcurve8[] = {0, 798, 1567, 2275, 2895, 3404, 3783, 4016, 4095};
-    ///< A sinusoial microstepping curve for the PWM output (8-bit range) with 17
-    ///< points - last one is start of next step.
+
+    /**
+     * @brief Microstep curve for n = 16.
+     * 
+     */
     static uint16_t microstepcurve16[] = {0, 401, 798, 1188, 1567, 1930, 2275, 2597, 2895, 3165, 3404,
                                           3611, 3783, 3918, 4016, 4075, 4095};
 
+    /**
+     * @brief Microstep curve for n = 32.
+     * 
+     */
     static uint16_t microstepcurve32[] = {0, 200, 401, 600, 798, 995, 1188, 1379, 1567, 1750, 1930,
                                           2105, 2275, 2439, 2597, 2750, 2895, 3034, 3165, 3289, 3404, 3512,
                                           3611, 3701, 3783, 3855, 3918, 3972, 4016, 4050, 4075, 4090, 4095};
 
+    /**
+     * @brief Microstep curve for n = 64.
+     * 
+     */
     static uint16_t microstepcurve64[] = {0, 100, 200, 301, 401, 501, 600, 700, 798, 897, 995,
                                           1092, 1188, 1284, 1379, 1473, 1567, 1659, 1750, 1841, 1930, 2018,
                                           2105, 2190, 2275, 2357, 2439, 2519, 2597, 2674, 2750, 2823, 2895,
@@ -67,6 +86,10 @@ namespace Adafruit
                                           3611, 3657, 3701, 3743, 3783, 3820, 3855, 3888, 3918, 3946, 3972,
                                           3995, 4016, 4034, 4050, 4064, 4075, 4083, 4090, 4093, 4095};
 
+    /**
+     * @brief Microstep curve for n = 128.
+     * 
+     */
     static uint16_t microstepcurve128[] = {0, 50, 100, 150, 200, 251, 301, 351, 401, 451, 501,
                                            551, 600, 650, 700, 749, 798, 848, 897, 946, 995, 1043,
                                            1092, 1140, 1188, 1236, 1284, 1332, 1379, 1426, 1473, 1520, 1567,
@@ -80,6 +103,10 @@ namespace Adafruit
                                            3995, 4006, 4016, 4025, 4034, 4042, 4050, 4057, 4064, 4070, 4075,
                                            4079, 4083, 4087, 4090, 4092, 4093, 4094, 4095};
 
+    /**
+     * @brief Microstep curve for n = 256.
+     * 
+     */
     static uint16_t microstepcurve256[] = {
         0, 25, 50, 75, 100, 125, 150, 175, 200, 226, 251,
         276, 301, 326, 351, 376, 401, 426, 451, 476, 501, 526,
@@ -106,6 +133,10 @@ namespace Adafruit
         4079, 4081, 4083, 4085, 4087, 4088, 4090, 4091, 4092, 4093, 4093,
         4094, 4094, 4094, 4095};
 
+    /**
+     * @brief Microstep curve for n = 512.
+     * 
+     */
     static uint16_t microstepcurve512[] = {
         0, 12, 25, 37, 50, 62, 75, 87, 100, 113, 125,
         138, 150, 163, 175, 188, 200, 213, 226, 238, 251, 263,
@@ -303,11 +334,13 @@ namespace Adafruit
             steppers[port].microsteps = microsteps;
             switch (microsteps)
             {
+#ifndef _DOXYGEN_
 #define MCASE(x)                                           \
     case (STEP##x):                                        \
         steppers[port].microsteps = STEP##x;               \
         steppers[port].microstepcurve = microstepcurve##x; \
         break;
+#endif // _DOXYGEN_
 
                 MCASE(8)
                 MCASE(16)
@@ -451,11 +484,13 @@ namespace Adafruit
 
         switch (microsteps)
         {
+#ifndef _DOXYGEN_
 #define MCASE(x)                            \
     case (STEP##x):                         \
         this->microsteps = STEP##x;         \
         microstepcurve = microstepcurve##x; \
         break;
+#endif // _DOXYGEN_
 
             MCASE(8)
             MCASE(16)
@@ -843,7 +878,7 @@ namespace Adafruit
 
     /*************** MotorShield Private **************/
     /**************************************************/
-
+#ifndef _DOXYGEN_
 #define LED0_ON_L 0x6
 #define LED0_ON_H 0x7
 #define LED0_OFF_L 0x8
@@ -860,6 +895,7 @@ namespace Adafruit
 
 #define PCA9685_MODE1 0x0
 #define PCA9685_PRESCALE 0xFE
+#endif // _DOXYGEN_
 
     bool MotorShield::reset()
     {

@@ -48,14 +48,28 @@ namespace Adafruit
  *
  */
 #define ADAFRUIT_MOTORSHIELD_DEBUG 0
+#ifndef _DOXYGEN_
 #ifndef MEB_DBGLVL
 #define MEB_DBGLVL 0
+#endif // _DOXYGEN_
 #endif // MEB_DBGLVL
 #elif ADAFRUIT_MOTORSHIELD_DEBUG > 0
 #define MEB_DBGLVL MEB_DBG_ALL
 #endif // ADAFURUIT_MOTORSHIELD_DEBUG
 
-    typedef enum _MotorStyle : uint8_t
+    /**
+     * @brief Defines the stepping technique used to actuate stepper motors.
+     * 
+     * @var SINGLE
+     * Single coil stepping
+     * @var DOUBLE
+     * Double coil stepping
+     * @var INTERLEAVE 
+     * Double coil interleaved stepping
+     * @var MICROSTEP
+     * Microstepping, achieves a smoother motion by dividing a step into smaller 'micro'steps.
+     */
+    typedef enum : uint8_t
     {
         SINGLE = 1,
         DOUBLE = 2,
@@ -63,23 +77,37 @@ namespace Adafruit
         MICROSTEP = 4
     } MotorStyle;
 
-    typedef enum _MotorDir : uint8_t
+    /**
+     * @brief Defines the direction of motor actuation.
+     * 
+     */
+    typedef enum : uint8_t
     {
-        FORWARD = 1,
-        BACKWARD = 2,
-        BRAKE = 3,
-        RELEASE = 4
+        FORWARD = 1, /*!< Forward direction */
+        BACKWARD = 2, /*!< Backward direction */
+        BRAKE = 3, /*!< Not used */
+        RELEASE = 4 /*!< Release the motor. */
+        /*!< In case of DC motor, stops running. */
+        /*!< In case of stepper motor, removes stall torque and powers down the coils. */
     } MotorDir;
 
-    typedef enum _MicroSteps : uint16_t
+    /**
+     * Defines the number of microsteps executed per step
+     * of a stepper motor. Increasing microsteps per step limits
+     * the maximum RPM achievable by a stepper motor due to I2C bus
+     * constraints. Upper limits for each microstep for a 200 steps/revolution, 
+     * double coil stepper motor are provided.
+     * 
+     */
+    typedef enum : uint16_t
     {
-        STEP8 = 8,
-        STEP16 = 16,
-        STEP32 = 32,
-        STEP64 = 64,
-        STEP128 = 128,
-        STEP256 = 256,
-        STEP512 = 512
+        STEP8 = 8, /*!< 8 microsteps per step, max speed 10 RPM */
+        STEP16 = 16,/*!< 16 microsteps per step, max speed 5 RPM */
+        STEP32 = 32, /*!< 32 microsteps per step, max speed 2.5 RPM */
+        STEP64 = 64, /*!< 64 microsteps per step, max speed 1.25 RPM */
+        STEP128 = 128, /*!< 128 microsteps per step, max speed 0.625 RPM */
+        STEP256 = 256, /*!< 256 microsteps per step, max speed 0.3125 RPM */
+        STEP512 = 512 /*!< 512 microsteps per step, max speed 0.15625 RPM */
     } MicroSteps;
 
     class MotorShield;
@@ -139,6 +167,7 @@ namespace Adafruit
         bool initd;
     };
 
+#ifndef _DOXYGEN_
     class StepperMotor;
     struct StepperMotorTimerData
     {
@@ -147,6 +176,7 @@ namespace Adafruit
         MotorDir dir;
         MotorStyle style;
     };
+#endif
 
     /**
      * @brief Object that controls and keeps state for a single stepper motor.
@@ -193,7 +223,7 @@ namespace Adafruit
         /**
          * @brief Set microsteps per step.
          *
-         * @param microsteps MicroSteps::STEP8 or MicroSteps::STEP16.
+         * @param microsteps {@link Adafruit::MicroSteps} members.
          */
         void setStep(MicroSteps microsteps);
 
@@ -275,7 +305,7 @@ namespace Adafruit
             pin = pin;
             active = state;
         }
-
+#ifndef _DOXYGEN_
         /**
          * @brief Assignment operator
          *
@@ -299,6 +329,7 @@ namespace Adafruit
         {
             return lhs.pos < rhs.pos;
         }
+#endif // _DOXYGEN_
     };
 
     /**
@@ -403,31 +434,41 @@ namespace Adafruit
          * @brief Initialize the I2C hardware and PWM driver, then turn off all pins.
          *
          * @param freq The PWM frequency for the driver, used for speed control and microstepping.
-         * By default we use 1600 Hz which is a little audible but efficient.
+         * By default 1600 Hz is used, which is a little audible but efficient.
          * @return bool true on success, false on failure
          */
         bool begin(uint16_t freq = 1600);
 
         /**
-         * @brief Mini factory that will return a pointer to an already-allocated
-         * Adafruit_DCMotor object. Initializes the DC motor and turns off all pins.
+         * @brief Returns a pointer to an already-allocated
+         * {@link Adafruit::DCMotor} object. Initializes the DC motor and turns off all pins.
          *
-         * @param n The DC motor port we want to use: 1 thru 4 are valid
-         * @return Adafruit_DCMotor* NULL on error, valid pointer on success
+         * @param n The DC motor port to be used: 1 thru 4 are valid
+         * @return Adafruit::DCMotor* NULL on error, valid pointer on success
          */
         DCMotor *getMotor(uint8_t n);
 
         /**
-         * @brief  Mini factory that will return a pointer to an already-allocated
-         * Adafruit_StepperMotor object with a given 'steps per rotation.
-         * Then initializes the stepper motor and turns off all pins.
+         * @brief  Returns a pointer to an already-allocated
+         * {@link Adafruit::StepperMotor} object with a given steps per rotation.
+         * Initializes the stepper motor and turns off all pins.
          *
-         * @param steps How many steps per revolution (used for RPM calculation)
-         * @param port The stepper motor port we want to use: only 1 or 2 are valid
-         * @return Adafruit_StepperMotor* NULL on error, valid pointer on success
+         * @param steps How many steps per revolution (used for RPM calculation).
+         * @param port The stepper motor port to be used: only 1 or 2 are valid.
+         * @param microsteps Number of microsteps per step to use.
+         * @return Adafruit::StepperMotor* NULL on error, valid pointer on success.
          */
         StepperMotor *getStepper(uint16_t steps, uint8_t port, MicroSteps microsteps = STEP16);
 
+        /**
+         * @brief Returns a pointer to an already-allocated {@link Adafruit::StepperMotorA} object with a given steps per rotation.
+         * Initializes the stepper motor and turns off all pins.
+         * 
+         * @param steps How many steps per revolution (used for RPM calculation).
+         * @param port The stepper motor port to be used: only 1 or 2 are valid.
+         * @param microsteps Number of microsteps per step to use.
+         * @return Adafruit::StepperMotorA* NULL on error, valid pointer on success.
+         */
         StepperMotorA *getStepperA(uint16_t steps, uint8_t port, MicroSteps microsteps = STEP16);
 
         /**
