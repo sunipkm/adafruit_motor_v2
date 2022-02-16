@@ -3,7 +3,7 @@
  * @author Sunip K. Mukherjee (sunipkmukherjee@gmail.com), based on work by Limor Fried/Ladyada for Adafruit Industries.
  * @brief This is the library for the Adafruit Motor Shield V2 for Arduino.
  * It supports DC motors & Stepper motors with microstepping as well
- * as stacking-support. It is *not* compatible with the V1 library!
+ * as stacking-support. It is *not* compatible with the V1 library.
  * @version 1.1.0
  * @date 2022-01-30
  *

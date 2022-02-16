@@ -1,29 +1,14 @@
 /*!
  * @file MotorShield.cpp
  *
- * @mainpage Adafruit Motor Shield v2 Driver for Linux
- *
- * @section intro_sec Introduction
- *
- * This is the library for the Adafruit Motor Shield V2 for Linux.
+ * @author Sunip K. Mukherjee (sunipkmukherjee@gmail.com), based on work by Limor Fried/Ladyada for Adafruit Industries.
+ * 
+ * @brief This is the implementation file for the Adafruit Motor Shield V2 for Arduino.
  * It supports DC motors & Stepper motors with microstepping as well
- * as stacking-support. It is *not* compatible with the V1 library!
- * For use with the Motor Shield https://www.adafruit.com/products/1483
- * and Motor FeatherWing https://www.adafruit.com/product/2927
- *
- * This shield/wing uses I2C to communicate, 2 pins (SCL+SDA) are required
- * to interface.
- *
- * Adafruit invests time and resources providing this open source code,
- * please support Adafruit and open-source hardware by purchasing
- * products from Adafruit!
- *
- * @section author Author
- *
- * Written by Limor Fried/Ladyada for Adafruit Industries.
- * Ported to Linux by Sunip K. Mukherjee.
- *
- * @section license License
+ * as stacking-support. It is *not* compatible with the V1 library.
+ * 
+ * @version 1.1.0
+ * @date 2022-01-30
  *
  * BSD license, all text here must be included in any redistribution.
  *
