@@ -195,7 +195,7 @@ namespace Adafruit
         if (i2cbus_open(bus, _bus, _addr) < 0)
         {
             dbprintlf("Error opening I2C bus %d", _bus);
-            return false;
+            throw std::runtime_error("Could not open device " + std::to_string(_addr) + " on bus " + std::to_string(_bus));
         }
         bool status = true;
         status &= reset();
