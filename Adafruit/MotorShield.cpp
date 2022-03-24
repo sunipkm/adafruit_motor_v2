@@ -435,11 +435,14 @@ namespace Adafruit
     StepperMotor::StepperMotor(void)
     {
         revsteps = currentstep = 0;
+        MC = nullptr;
         microsteps = STEP16;
         initd = false;
-        microstepcurve = nullptr;
+        microstepcurve = microstepcurve16;
         done = &adafruit_motorshield_internal_done;
         usperstep = 0;
+        stop = false;
+        moving = false;
     }
 
     void StepperMotor::release(void)
