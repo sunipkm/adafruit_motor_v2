@@ -11,8 +11,7 @@ MOTORSHIELDTEST=examples/motorshield.o
 
 LIBCLKGEN = clkgen/libclkgen.a
 
-COBJS=i2cbus/i2cbus.o \
-		gpiodev/gpiodev.o
+COBJS=i2cbus/i2cbus.o
 
 motor: $(COBJS) $(CPPOBJS) $(MOTORSHIELDTEST) $(LIBCLKGEN)
 	$(CXX) -o $@.out $(COBJS) $(CPPOBJS) $(MOTORSHIELDTEST) $(LIBCLKGEN) $(EDLDFLAGS)

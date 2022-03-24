@@ -4,8 +4,8 @@
  * @brief This is the library for the Adafruit Motor Shield V2 for Arduino.
  * It supports DC motors & Stepper motors with microstepping as well
  * as stacking-support. It is *not* compatible with the V1 library.
- * @version 1.1.0
- * @date 2022-01-30
+ * @version 2.0.0
+ * @date 2022-03-24
  *
  * @copyright Copyright (c) 2022
  *
@@ -30,10 +30,10 @@
 #ifndef _MotorShield_hpp_
 #define _MotorShield_hpp_
 
+#include <unistd.h>
 #include <stdint.h>
 #include <signal.h>
 #include "i2cbus/i2cbus.h"
-#include "gpiodev/gpiodev.h"
 #include "clkgen.h"
 
 #include <mutex>
@@ -59,12 +59,12 @@ namespace Adafruit
 
     /**
      * @brief Defines the stepping technique used to actuate stepper motors.
-     * 
+     *
      * @var SINGLE
      * Single coil stepping
      * @var DOUBLE
      * Double coil stepping
-     * @var INTERLEAVE 
+     * @var INTERLEAVE
      * Double coil interleaved stepping
      * @var MICROSTEP
      * Microstepping, achieves a smoother motion by dividing a step into smaller 'micro'steps.
@@ -79,14 +79,14 @@ namespace Adafruit
 
     /**
      * @brief Defines the direction of motor actuation.
-     * 
+     *
      */
     typedef enum : uint8_t
     {
-        FORWARD = 1, /*!< Forward direction */
+        FORWARD = 1,  /*!< Forward direction */
         BACKWARD = 2, /*!< Backward direction */
-        BRAKE = 3, /*!< Not used */
-        RELEASE = 4 /*!< Release the motor. */
+        BRAKE = 3,    /*!< Not used */
+        RELEASE = 4   /*!< Release the motor. */
         /*!< In case of DC motor, stops running. */
         /*!< In case of stepper motor, removes stall torque and powers down the coils. */
     } MotorDir;
@@ -95,19 +95,19 @@ namespace Adafruit
      * Defines the number of microsteps executed per step
      * of a stepper motor. Increasing microsteps per step limits
      * the maximum RPM achievable by a stepper motor due to I2C bus
-     * constraints. Upper limits for each microstep for a 200 steps/revolution, 
+     * constraints. Upper limits for each microstep for a 200 steps/revolution,
      * double coil stepper motor are provided.
-     * 
+     *
      */
     typedef enum : uint16_t
     {
-        STEP8 = 8, /*!< 8 microsteps per step, max speed 10 RPM */
-        STEP16 = 16,/*!< 16 microsteps per step, max speed 5 RPM */
-        STEP32 = 32, /*!< 32 microsteps per step, max speed 2.5 RPM */
-        STEP64 = 64, /*!< 64 microsteps per step, max speed 1.25 RPM */
-        STEP128 = 128, /*!< 128 microsteps per step, max speed 0.625 RPM */
-        STEP256 = 256, /*!< 256 microsteps per step, max speed 0.3125 RPM */
-        STEP512 = 512 /*!< 512 microsteps per step, max speed 0.15625 RPM */
+        STEP8 = 8,     /*!< 8 microsteps per step, max speed 10 RPM. */
+        STEP16 = 16,   /*!< 16 microsteps per step, max speed 5 RPM. */
+        STEP32 = 32,   /*!< 32 microsteps per step, max speed 2.5 RPM. */
+        STEP64 = 64,   /*!< 64 microsteps per step, max speed 1.25 RPM. */
+        STEP128 = 128, /*!< 128 microsteps per step, max speed 0.625 RPM. */
+        STEP256 = 256, /*!< 256 microsteps per step, max speed 0.3125 RPM. */
+        STEP512 = 512  /*!< 512 microsteps per step, max speed 0.15625 RPM. */
     } MicroSteps;
 
     class MotorShield;
@@ -175,6 +175,13 @@ namespace Adafruit
         uint16_t steps;
         MotorDir dir;
         MotorStyle style;
+        MicroSteps msteps;
+    };
+
+    struct StepperMotorDestroyClkData
+    {
+        StepperMotor *_this;
+        clkgen_t clk;
     };
 #endif
 
@@ -196,8 +203,10 @@ namespace Adafruit
          * @brief Set the delay for the Stepper Motor speed in RPM.
          *
          * @param rpm The desired RPM, it is not guaranteed to be achieved. In double coil mode upto ~68 RPM is achieved for a 200 steps/rev stepper, in microstep mode ~1.25 RPM is achieved for a 200 steps/rev stepper at STEP64 setting, ~0.3125 RPM at STEP256 setting.
+         *
+         * @return bool true on success, false on failure.
          */
-        void setSpeed(double rpm);
+        bool setSpeed(double rpm);
 
         /**
          * @brief Move the stepper motor with the given RPM speed,
@@ -205,12 +214,17 @@ namespace Adafruit
          *
          * @param steps Number of steps to move.
          * @param dir The direction of movement, can be FORWARD or BACKWARD.
-         * @param style Stepping style, can be SINGLE, DOUBLE, INTERLEAVE or MICROSTEP.
+         * @param style Stepping style, can be SINGLE, DOUBLE, INTERLEAVE or MICROSTEP. SINGLE by default.
+         * @param blocking Whether the step function blocks until stepping is complete. Set to true by default.
          */
-        void step(uint16_t steps, MotorDir dir, MotorStyle style = SINGLE);
+        void step(uint16_t steps, MotorDir dir, MotorStyle style = SINGLE, bool blocking = true);
 
         /**
          * @brief Move the stepper motor by one step. No delays implemented.
+         * Care must be taken while using onestep, especially regarding stopping
+         * at a non-integral step while microstepping. Use this function in
+         * conjunction with {@link Adafruit::StepperMotor::getStepPeriod} function
+         * that gives the time (in microseconds) required to execute a full step.
          *
          * @param dir The direction of movement, can be FORWARD or BACKWARD.
          * @param style Stepping style, can be SINGLE, DOUBLE, INTERLEAVE or MICROSTEP.
@@ -224,14 +238,37 @@ namespace Adafruit
          * @brief Set microsteps per step.
          *
          * @param microsteps {@link Adafruit::MicroSteps} members.
+         *
+         * @return bool true on success, false on failure.
          */
-        void setStep(MicroSteps microsteps);
+        bool setStep(MicroSteps microsteps);
 
         /**
          * @brief Release all pins of the stepper motor so it free-spins.
          *
          */
         void release(void);
+
+        /**
+         * @brief Check if the motor is stepping.
+         *
+         * @return bool True if stepping, false otherwise.
+         */
+        bool isMoving() const;
+
+        /**
+         * @brief Stop stepping the motor.
+         *
+         */
+        void stopMotor();
+
+        /**
+         * @brief Get the time period of each full step.
+         * The time period is useful in case of onestepping/manual stepping.
+         *
+         * @return uint64_t Time period of a full step
+         */
+        uint64_t getStepPeriod() const;
 
         friend class MotorShield; ///< Let MotorShield create StepperMotors
 
@@ -250,162 +287,61 @@ namespace Adafruit
         MotorShield *MC;
         bool initd;
         volatile sig_atomic_t *done;
+        volatile bool moving;
+        volatile bool stop;
         static void stepHandlerFn(clkgen_t clk, void *data_)
         {
             struct StepperMotorTimerData *data = (struct StepperMotorTimerData *)data_;
             StepperMotor *_this = data->_this;
-            if (data->steps && !(*(_this->done)))
+            // if at odd microstep we HAVE to step until we reach an integral step
+            if ((data->steps % data->msteps) && (data->style == MotorStyle::MICROSTEP))
             {
+                _this->moving = true;
+                _this->onestep(data->dir, data->style);
+                data->steps--;
+                return; // can not let this reach the unblock check
+            }
+            else if (data->steps && !(*(_this->done)) && !(_this->stop)) // integral step/not microstepping, no Ctrl+C received, emergency stop not pressed
+            {
+                _this->moving = true;
                 _this->onestep(data->dir, data->style);
                 data->steps--;
             }
-            if (data->steps == 0 || (*(_this->done)))
+            if (data->steps == 0 || (*(_this->done)) || _this->stop) // end reached/done = 1
             {
+                _this->moving = false;
                 _this->cond.notify_all();
             }
         }
-    };
-
-    /**
-     * @brief Structure describing a limit switch
-     *
-     */
-    class LimitSW
-    {
-    public:
-        int pos;      ///< Limit switch position
-        MotorDir dir; ///< Direction from origin to limit switch
-        int pin;      ///< GPIO pin
-        int active;   ///< active gpio state
-
-        /**
-         * @brief Create a new empty limit switch object.
-         *
-         */
-        LimitSW()
+        static void stepThreadFn(StepperMotor *mot, uint16_t steps, MotorDir dir, MotorStyle style)
         {
-            pos = 0;
-            dir = MotorDir::BRAKE;
-            pin = -1;
-            active = GPIO_HIGH;
+            std::unique_lock<std::mutex> lock(mot->cs);
+            if (mot->usperstep == 0)
+                throw std::runtime_error("RPM has to be set before stepping the motor.");
+            uint64_t uspers = mot->usperstep;
+
+            if (style == INTERLEAVE)
+            {
+                uspers /= 2;
+            }
+            else if (style == MICROSTEP)
+            {
+                uspers /= mot->microsteps;
+                steps *= mot->microsteps;
+            }
+            mot->stop = false;
+            StepperMotorTimerData data = {mot, steps, dir, style, mot->microsteps};
+            clkgen_t clk = create_clk(uspers * 1000LLU, stepHandlerFn, &data);
+            if (mot->cond.wait_for(lock, std::chrono::microseconds(steps * uspers)) == std::cv_status::timeout)
+            {
+                while (data.steps)
+                {
+                    usleep(uspers);
+                }
+            }
+            destroy_clk(clk);
+            mot->moving = false;
         }
-
-        /**
-         * @brief Create a new limit switch object with properties.
-         *
-         * @param p Limit SW position.
-         * @param d Direction from origin.
-         * @param pin GPIO pin.
-         * @param state GPIO state when active.
-         */
-        LimitSW(int p, MotorDir d, int pin, int state = GPIO_HIGH)
-        {
-            pos = p;
-            dir = d;
-            pin = pin;
-            active = state;
-        }
-#ifndef _DOXYGEN_
-        /**
-         * @brief Assignment operator
-         *
-         * @param rhs Reference to LimitSW object
-         */
-        void operator=(const LimitSW &rhs)
-        {
-            pos = rhs.pos;
-            dir = rhs.dir;
-        }
-
-        /**
-         * @brief Comparison operator
-         *
-         * @param lhs
-         * @param rhs
-         * @return bool true if lhs.pos < rhs.pos, else false
-         */
-        friend bool operator<(const LimitSW &lhs,
-                              const LimitSW &rhs)
-        {
-            return lhs.pos < rhs.pos;
-        }
-#endif // _DOXYGEN_
-    };
-
-    /**
-     * @brief Object that controls and keeps state for a single stepper motor, with advanced location tracking and limit switch support.
-     * This motor however does not support the precise timing of provided by the {@link Adafruit::StepperMotor::step()} function in the 
-     * {@link Adafruit::StepperMotor} class.
-     *
-     */
-    class StepperMotorA : public StepperMotor
-    {
-    private:
-        /**
-         * @brief Create an uninitialized StepperMotorA object.
-         *
-         */
-        StepperMotorA(void);
-
-    public:
-        friend class MotorShield;
-
-        /**
-         * @brief Set the state of the stepper motor
-         *
-         * @param origin Origin of coordinate system
-         * @param currentPos Current position of motor
-         * @param sw1 Limit switch 1
-         * @param sw2 Limit switch 2
-         * @param estop Optional: Emergency stop switch
-         * @return true on successful init, false on failure
-         */
-        bool setState(int origin, int currentPos, const LimitSW &sw1, const LimitSW &sw2, const LimitSW &estop);
-
-        /**
-         * @brief Return motor to origin
-         *
-         * @return int Location of origin
-         */
-        int goHome();
-
-        /**
-         * @brief Step motor to destination
-         *
-         * @param loc Destination
-         * @param style MotorStyle
-         * @return int End location
-         */
-        int goToLoc(int loc, MotorStyle style = SINGLE);
-
-        /**
-         * @brief Get the origin of the motor
-         *
-         * @return int
-         */
-        int getOrigin() const { return origin; }
-
-        /**
-         * @brief Get the current position of the motor
-         *
-         * @return int
-         */
-        int getCurrentPos() const { return currentPos; }
-
-        /**
-         * @brief Stops the motor if stepping.
-         *
-         */
-        void stopMotor() { stopnow = true; }
-
-    private:
-        int origin;
-        int currentPos;
-        LimitSW sw1,
-            sw2,
-            estop;
-        volatile bool stopnow;
-        void moveSteps(uint32_t steps, MotorDir dir, bool ignoreSW, MotorStyle style);
     };
 
     /**
@@ -461,17 +397,6 @@ namespace Adafruit
         StepperMotor *getStepper(uint16_t steps, uint8_t port, MicroSteps microsteps = STEP16);
 
         /**
-         * @brief Returns a pointer to an already-allocated {@link Adafruit::StepperMotorA} object with a given steps per rotation.
-         * Initializes the stepper motor and turns off all pins.
-         * 
-         * @param steps How many steps per revolution (used for RPM calculation).
-         * @param port The stepper motor port to be used: only 1 or 2 are valid.
-         * @param microsteps Number of microsteps per step to use.
-         * @return Adafruit::StepperMotorA* NULL on error, valid pointer on success.
-         */
-        StepperMotorA *getStepperA(uint16_t steps, uint8_t port, MicroSteps microsteps = STEP16);
-
-        /**
          * @brief Helper that sets the PWM output on a pin and manages 'all on or off'.
          *
          * @param pin The PWM output on the driver that we want to control (0-15)
@@ -495,7 +420,7 @@ namespace Adafruit
         int _bus;
         uint16_t _freq;
         DCMotor dcmotors[4];
-        StepperMotorA steppers[2];
+        StepperMotor steppers[2];
         i2cbus bus[1];
         bool reset();
         bool setPWMFreq(float freq);
