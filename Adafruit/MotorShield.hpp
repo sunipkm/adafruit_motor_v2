@@ -191,67 +191,16 @@ namespace Adafruit
      */
     class StepperMotor
     {
+    private:
+        static void stepHandlerFn(clkgen_t clk, void *data_);
+        static void stepThreadFn(StepperMotor *mot, uint16_t steps, MotorDir dir, MotorStyle style);
+
     protected:
         /**
          * @brief Create an uninitialized StepperMotor object.
          *
          */
         StepperMotor(void);
-
-    private:
-        static void stepHandlerFn(clkgen_t clk, void *data_)
-        {
-            struct StepperMotorTimerData *data = (struct StepperMotorTimerData *)data_;
-            StepperMotor *_this = data->_this;
-            // if at odd microstep we HAVE to step until we reach an integral step
-            if ((data->steps % data->msteps) && (data->style == MotorStyle::MICROSTEP))
-            {
-                _this->moving = true;
-                _this->onestep(data->dir, data->style);
-                data->steps--;
-                return; // can not let this reach the unblock check
-            }
-            else if (data->steps && !(*(_this->done)) && !(_this->stop)) // integral step/not microstepping, no Ctrl+C received, emergency stop not pressed
-            {
-                _this->moving = true;
-                _this->onestep(data->dir, data->style);
-                data->steps--;
-            }
-            if (data->steps == 0 || (*(_this->done)) || _this->stop) // end reached/done = 1
-            {
-                _this->moving = false;
-                _this->cond.notify_all();
-            }
-        }
-        static void stepThreadFn(StepperMotor *mot, uint16_t steps, MotorDir dir, MotorStyle style)
-        {
-            std::unique_lock<std::mutex> lock(mot->cs);
-            if (mot->usperstep == 0)
-                throw std::runtime_error("RPM has to be set before stepping the motor.");
-            uint64_t uspers = mot->usperstep;
-
-            if (style == INTERLEAVE)
-            {
-                uspers /= 2;
-            }
-            else if (style == MICROSTEP)
-            {
-                uspers /= mot->microsteps;
-                steps *= mot->microsteps;
-            }
-            mot->stop = false;
-            StepperMotorTimerData data = {mot, steps, dir, style, mot->microsteps};
-            clkgen_t clk = create_clk(uspers * 1000LLU, stepHandlerFn, &data);
-            if (mot->cond.wait_for(lock, std::chrono::microseconds(steps * uspers)) == std::cv_status::timeout)
-            {
-                while (data.steps)
-                {
-                    usleep(uspers);
-                }
-            }
-            destroy_clk(clk);
-            mot->moving = false;
-        }
 
     public:
         /**
