@@ -38,7 +38,6 @@
 
 #include <mutex>
 #include <condition_variable>
-#include <list>
 
 namespace Adafruit
 {
@@ -56,6 +55,12 @@ namespace Adafruit
 #elif ADAFRUIT_MOTORSHIELD_DEBUG > 0
 #define MEB_DBGLVL MEB_DBG_ALL
 #endif // ADAFURUIT_MOTORSHIELD_DEBUG
+
+/**
+ * @brief Indicates the function throws exceptions
+ * 
+ */
+#define _Catchable
 
     /**
      * @brief Defines the stepping technique used to actuate stepper motors.
@@ -205,23 +210,24 @@ namespace Adafruit
     public:
         /**
          * @brief Set the delay for the Stepper Motor speed in RPM.
+         * Throws exception in case rpm <= 0.
          *
          * @param rpm The desired RPM, it is not guaranteed to be achieved. In double coil mode upto ~68 RPM is achieved for a 200 steps/rev stepper, in microstep mode ~1.25 RPM is achieved for a 200 steps/rev stepper at STEP64 setting, ~0.3125 RPM at STEP256 setting.
          *
          * @return bool true on success, false on failure.
          */
-        bool setSpeed(double rpm);
+        bool _Catchable setSpeed(double rpm);
 
         /**
          * @brief Move the stepper motor with the given RPM speed,
-         * at the speed set using {@link Adafruit::StepperMotor::setSpeed}.
+         * at the speed set using {@link Adafruit::StepperMotor::setSpeed}. Throws exception if RPM was not set prior to call.
          *
          * @param steps Number of steps to move.
          * @param dir The direction of movement, can be FORWARD or BACKWARD.
          * @param style Stepping style, can be SINGLE, DOUBLE, INTERLEAVE or MICROSTEP. SINGLE by default.
          * @param blocking Whether the step function blocks until stepping is complete. Set to true by default.
          */
-        void step(uint16_t steps, MotorDir dir, MotorStyle style = SINGLE, bool blocking = true);
+        void _Catchable step(uint16_t steps, MotorDir dir, MotorStyle style = SINGLE, bool blocking = true);
 
         /**
          * @brief Move the stepper motor by one step. No delays implemented.
@@ -268,11 +274,11 @@ namespace Adafruit
 
         /**
          * @brief Get the time period of each full step.
-         * The time period is useful in case of onestepping/manual stepping.
+         * The time period is useful in case of onestepping/manual stepping. Throws exception if RPM was not set prior to call.
          *
          * @return uint64_t Time period of a full step
          */
-        uint64_t getStepPeriod() const;
+        uint64_t _Catchable getStepPeriod() const;
 
         friend class MotorShield; ///< Let MotorShield create StepperMotors
 
@@ -324,7 +330,7 @@ namespace Adafruit
          * By default 1600 Hz is used, which is a little audible but efficient.
          * @return bool true on success, false on failure
          */
-        bool begin(uint16_t freq = 1600);
+        bool _Catchable begin(uint16_t freq = 1600);
 
         /**
          * @brief Returns a pointer to an already-allocated
@@ -376,7 +382,7 @@ namespace Adafruit
         bool reset();
         bool setPWMFreq(float freq);
         bool setPWM(uint8_t num, uint16_t on, uint16_t off);
-        uint8_t read8(uint8_t addr);
+        uint8_t _Catchable read8(uint8_t addr);
         bool write8(uint8_t addr, uint8_t d);
     };
 };

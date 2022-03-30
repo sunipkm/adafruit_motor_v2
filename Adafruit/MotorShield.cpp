@@ -16,7 +16,6 @@
 
 #include "MotorShield.hpp"
 #include "meb_print.h"
-#include <unistd.h>
 #include <stdio.h>
 #include <math.h>
 
@@ -43,7 +42,8 @@ namespace Adafruit
      * The last point is the beginning of the next step.
      *
      */
-    static uint16_t microstepcurve8[] = {0, 798, 1567, 2275, 2895, 3404, 3783, 4016, 4095};
+    static uint16_t microstepcurve8[] = {0, 798, 1567, 2275, 2895,
+                                         3404, 3783, 4016, 4095};
 
     /**
      * @brief Microstep curve for n = 16.
@@ -190,7 +190,7 @@ namespace Adafruit
         i2cbus_close(bus);
     }
 
-    bool MotorShield::begin(uint16_t freq)
+    bool _Catchable MotorShield::begin(uint16_t freq)
     {
         if (i2cbus_open(bus, _bus, _addr) < 0)
         {
@@ -455,8 +455,10 @@ namespace Adafruit
         MC->setPWM(PWMBpin, 0);
     }
 
-    bool StepperMotor::setSpeed(double rpm)
+    bool _Catchable StepperMotor::setSpeed(double rpm)
     {
+        if (rpm <= 0)
+            throw std::runtime_error("Motor speed can not be negative or zero.");
         std::unique_lock<std::mutex> lock(cs, std::try_to_lock);
         if (lock.owns_lock())
         {
@@ -501,13 +503,13 @@ namespace Adafruit
         return false;
     }
 
-    void StepperMotor::step(uint16_t steps, MotorDir dir, MotorStyle style, bool blocking)
+    void _Catchable StepperMotor::step(uint16_t steps, MotorDir dir, MotorStyle style, bool blocking)
     {
+        if (usperstep == 0)
+            throw std::runtime_error("RPM has to be set before stepping the motor.");
         if (blocking)
         {
             std::unique_lock<std::mutex> lock(cs);
-            if (usperstep == 0)
-                throw std::runtime_error("RPM has to be set before stepping the motor.");
             uint64_t uspers = usperstep;
 
             if (style == INTERLEAVE)
@@ -551,7 +553,7 @@ namespace Adafruit
             stop = true;
     }
 
-    uint64_t StepperMotor::getStepPeriod() const
+    uint64_t _Catchable StepperMotor::getStepPeriod() const
     {
         if (usperstep == 0)
             throw std::runtime_error("RPM has to be set before stepping the motor.");
@@ -757,58 +759,56 @@ namespace Adafruit
     }
 
     void StepperMotor::stepHandlerFn(clkgen_t clk, void *data_)
+    {
+        struct StepperMotorTimerData *data = (struct StepperMotorTimerData *)data_;
+        StepperMotor *_this = data->_this;
+        // if at odd microstep we HAVE to step until we reach an integral step
+        if ((data->steps % data->msteps) && (data->style == MotorStyle::MICROSTEP))
         {
-            struct StepperMotorTimerData *data = (struct StepperMotorTimerData *)data_;
-            StepperMotor *_this = data->_this;
-            // if at odd microstep we HAVE to step until we reach an integral step
-            if ((data->steps % data->msteps) && (data->style == MotorStyle::MICROSTEP))
-            {
-                _this->moving = true;
-                _this->onestep(data->dir, data->style);
-                data->steps--;
-                return; // can not let this reach the unblock check
-            }
-            else if (data->steps && !(*(_this->done)) && !(_this->stop)) // integral step/not microstepping, no Ctrl+C received, emergency stop not pressed
-            {
-                _this->moving = true;
-                _this->onestep(data->dir, data->style);
-                data->steps--;
-            }
-            if (data->steps == 0 || (*(_this->done)) || _this->stop) // end reached/done = 1
-            {
-                _this->moving = false;
-                _this->cond.notify_all();
-            }
+            _this->moving = true;
+            _this->onestep(data->dir, data->style);
+            data->steps--;
+            return; // can not let this reach the unblock check
         }
-        void StepperMotor::stepThreadFn(StepperMotor *mot, uint16_t steps, MotorDir dir, MotorStyle style)
+        else if (data->steps && !(*(_this->done)) && !(_this->stop)) // integral step/not microstepping, no Ctrl+C received, emergency stop not pressed
         {
-            std::unique_lock<std::mutex> lock(mot->cs);
-            if (mot->usperstep == 0)
-                throw std::runtime_error("RPM has to be set before stepping the motor.");
-            uint64_t uspers = mot->usperstep;
+            _this->moving = true;
+            _this->onestep(data->dir, data->style);
+            data->steps--;
+        }
+        if (data->steps == 0 || (*(_this->done)) || _this->stop) // end reached/done = 1
+        {
+            _this->moving = false;
+            _this->cond.notify_all();
+        }
+    }
+    void StepperMotor::stepThreadFn(StepperMotor *mot, uint16_t steps, MotorDir dir, MotorStyle style)
+    {
+        std::unique_lock<std::mutex> lock(mot->cs);
+        uint64_t uspers = mot->usperstep;
 
-            if (style == INTERLEAVE)
-            {
-                uspers /= 2;
-            }
-            else if (style == MICROSTEP)
-            {
-                uspers /= mot->microsteps;
-                steps *= mot->microsteps;
-            }
-            mot->stop = false;
-            StepperMotorTimerData data = {mot, steps, dir, style, mot->microsteps};
-            clkgen_t clk = create_clk(uspers * 1000LLU, stepHandlerFn, &data);
-            if (mot->cond.wait_for(lock, std::chrono::microseconds(steps * uspers)) == std::cv_status::timeout)
-            {
-                while (data.steps)
-                {
-                    usleep(uspers);
-                }
-            }
-            destroy_clk(clk);
-            mot->moving = false;
+        if (style == INTERLEAVE)
+        {
+            uspers /= 2;
         }
+        else if (style == MICROSTEP)
+        {
+            uspers /= mot->microsteps;
+            steps *= mot->microsteps;
+        }
+        mot->stop = false;
+        StepperMotorTimerData data = {mot, steps, dir, style, mot->microsteps};
+        clkgen_t clk = create_clk(uspers * 1000LLU, stepHandlerFn, &data);
+        if (mot->cond.wait_for(lock, std::chrono::microseconds(steps * uspers)) == std::cv_status::timeout)
+        {
+            while (data.steps)
+            {
+                usleep(uspers);
+            }
+        }
+        destroy_clk(clk);
+        mot->moving = false;
+    }
 
     /*************** Steppers **************/
     /***************************************/
@@ -907,7 +907,7 @@ namespace Adafruit
         return true;
     }
 
-    uint8_t MotorShield::read8(uint8_t addr)
+    uint8_t _Catchable MotorShield::read8(uint8_t addr)
     {
         uint8_t data = 0x0;
         int counter = 10;
