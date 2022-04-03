@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['limitsw_0',['LimitSW',['../class_adafruit_1_1_limit_s_w.html',1,'Adafruit::LimitSW'],['../class_adafruit_1_1_limit_s_w.html#a144b8a66ddf8f3016a525b752ecf11c6',1,'Adafruit::LimitSW::LimitSW()'],['../class_adafruit_1_1_limit_s_w.html#acc61adcc88bb4ccf4ae3b9917d767a05',1,'Adafruit::LimitSW::LimitSW(int p, MotorDir d, int pin, int state=GPIO_HIGH)']]]
+  ['interleave_0',['INTERLEAVE',['../_motor_shield_8hpp.html#a5799640d7b068882d2b4c51ee30d1834a183b29169bd52287f27eea596ea7a204',1,'Adafruit']]],
+  ['ismoving_1',['isMoving',['../class_adafruit_1_1_stepper_motor.html#a80ba8412b6a5e361fb0aec69b27f98d7',1,'Adafruit::StepperMotor']]]
 ];

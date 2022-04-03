@@ -21,7 +21,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Adafruit Motor Shield v2 Linux Driver<span id="projectnumber">&#160;1.1.0</span>
+   <div id="projectname">Adafruit Motor Shield v2 Linux Driver<span id="projectnumber">&#160;2.0.0</span>
    </div>
   </td>
  </tr>
@@ -76,14 +76,13 @@ $(function() {
 
 <p>This is the library for the Adafruit Motor Shield V2 for Arduino. It supports DC motors &amp; Stepper motors with microstepping as well as stacking-support. It is <em>not</em> compatible with the V1 library.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;stdint.h&gt;</code><br />
+<div class="textblock"><code>#include &lt;unistd.h&gt;</code><br />
+<code>#include &lt;stdint.h&gt;</code><br />
 <code>#include &lt;signal.h&gt;</code><br />
 <code>#include &quot;i2cbus/i2cbus.h&quot;</code><br />
-<code>#include &quot;gpiodev/gpiodev.h&quot;</code><br />
 <code>#include &quot;clkgen.h&quot;</code><br />
 <code>#include &lt;mutex&gt;</code><br />
 <code>#include &lt;condition_variable&gt;</code><br />
-<code>#include &lt;list&gt;</code><br />
 </div>
 <p><a href="_motor_shield_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -95,12 +94,6 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit_1_1_stepper_motor.html">Adafruit::StepperMotor</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Object that controls and keeps state for a single stepper motor.  <a href="class_adafruit_1_1_stepper_motor.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit_1_1_limit_s_w.html">Adafruit::LimitSW</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Structure describing a limit switch.  <a href="class_adafruit_1_1_limit_s_w.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit_1_1_stepper_motor_a.html">Adafruit::StepperMotorA</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Object that controls and keeps state for a single stepper motor, with advanced location tracking and limit switch support. This motor however does not support the precise timing of provided by the <code><a class="el" href="class_adafruit_1_1_stepper_motor.html#a8a08847a002c80febbc6f86c7a72004f">Adafruit::StepperMotor::step()</a></code> function in the <code><a class="el" href="class_adafruit_1_1_stepper_motor.html">Adafruit::StepperMotor</a></code> class.  <a href="class_adafruit_1_1_stepper_motor_a.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit_1_1_motor_shield.html">Adafruit::MotorShield</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Object to control and maintain state for the entire motor shield. Use this class to create DC and Stepper motor objects.  <a href="class_adafruit_1_1_motor_shield.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -111,6 +104,10 @@ Macros</h2></td></tr>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>ADAFRUIT_MOTORSHIELD_DEBUG</b>&#160;&#160;&#160;0</td></tr>
 <tr class="memdesc:a33d3dcaaca4795feb97edbcd55b37dfc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable debug printouts for motor shield. <br /></td></tr>
 <tr class="separator:a33d3dcaaca4795feb97edbcd55b37dfc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a617f96d75b265f3aa1f392a3cce50e93"><td class="memItemLeft" align="right" valign="top"><a id="a617f96d75b265f3aa1f392a3cce50e93" name="a617f96d75b265f3aa1f392a3cce50e93"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>_Catchable</b></td></tr>
+<tr class="memdesc:a617f96d75b265f3aa1f392a3cce50e93"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates the function throws exceptions. <br /></td></tr>
+<tr class="separator:a617f96d75b265f3aa1f392a3cce50e93"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
@@ -143,8 +140,8 @@ Enumerations</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >This is the library for the Adafruit Motor Shield V2 for Arduino. It supports DC motors &amp; Stepper motors with microstepping as well as stacking-support. It is <em>not</em> compatible with the V1 library. </p>
 <dl class="section author"><dt>Author</dt><dd>Sunip K. Mukherjee (<a href="#" onclick="location.href='mai'+'lto:'+'sun'+'ip'+'kmu'+'kh'+'erj'+'ee'+'@gm'+'ai'+'l.c'+'om'; return false;">sunip<span class="obfuscator">.nosp@m.</span>kmuk<span class="obfuscator">.nosp@m.</span>herje<span class="obfuscator">.nosp@m.</span>e@gm<span class="obfuscator">.nosp@m.</span>ail.c<span class="obfuscator">.nosp@m.</span>om</a>), based on work by Limor Fried/Ladyada for Adafruit Industries. </dd></dl>
-<dl class="section version"><dt>Version</dt><dd>1.1.0 </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>2022-01-30</dd></dl>
+<dl class="section version"><dt>Version</dt><dd>2.0.0 </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>2022-03-24</dd></dl>
 <dl class="section copyright"><dt>Copyright</dt><dd>Copyright (c) 2022 </dd></dl>
 </div><h2 class="groupheader">Enumeration Type Documentation</h2>
 <a id="a0d45be38e9ecba41e9d78d79b0fc27b2" name="a0d45be38e9ecba41e9d78d79b0fc27b2"></a>
@@ -160,19 +157,19 @@ Enumerations</h2></td></tr>
 </div><div class="memdoc">
 <p >Defines the number of microsteps executed per step of a stepper motor. Increasing microsteps per step limits the maximum RPM achievable by a stepper motor due to I2C bus constraints. Upper limits for each microstep for a 200 steps/revolution, double coil stepper motor are provided. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a0d45be38e9ecba41e9d78d79b0fc27b2a210e813f5e8e59873bee74e0d9725dbf" name="a0d45be38e9ecba41e9d78d79b0fc27b2a210e813f5e8e59873bee74e0d9725dbf"></a>STEP8&#160;</td><td class="fielddoc"><p >8 microsteps per step, max speed 10 RPM </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a0d45be38e9ecba41e9d78d79b0fc27b2a210e813f5e8e59873bee74e0d9725dbf" name="a0d45be38e9ecba41e9d78d79b0fc27b2a210e813f5e8e59873bee74e0d9725dbf"></a>STEP8&#160;</td><td class="fielddoc"><p >8 microsteps per step, max speed 10 RPM. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a0d45be38e9ecba41e9d78d79b0fc27b2aac2bcb497fcc43284fa14642d51a4ba0" name="a0d45be38e9ecba41e9d78d79b0fc27b2aac2bcb497fcc43284fa14642d51a4ba0"></a>STEP16&#160;</td><td class="fielddoc"><p >16 microsteps per step, max speed 5 RPM </p>
+<tr><td class="fieldname"><a id="a0d45be38e9ecba41e9d78d79b0fc27b2aac2bcb497fcc43284fa14642d51a4ba0" name="a0d45be38e9ecba41e9d78d79b0fc27b2aac2bcb497fcc43284fa14642d51a4ba0"></a>STEP16&#160;</td><td class="fielddoc"><p >16 microsteps per step, max speed 5 RPM. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a0d45be38e9ecba41e9d78d79b0fc27b2a553d18c636286385f261a82affd34aad" name="a0d45be38e9ecba41e9d78d79b0fc27b2a553d18c636286385f261a82affd34aad"></a>STEP32&#160;</td><td class="fielddoc"><p >32 microsteps per step, max speed 2.5 RPM </p>
+<tr><td class="fieldname"><a id="a0d45be38e9ecba41e9d78d79b0fc27b2a553d18c636286385f261a82affd34aad" name="a0d45be38e9ecba41e9d78d79b0fc27b2a553d18c636286385f261a82affd34aad"></a>STEP32&#160;</td><td class="fielddoc"><p >32 microsteps per step, max speed 2.5 RPM. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a0d45be38e9ecba41e9d78d79b0fc27b2a7bcc57c67ee5759f389b94250fdb33f9" name="a0d45be38e9ecba41e9d78d79b0fc27b2a7bcc57c67ee5759f389b94250fdb33f9"></a>STEP64&#160;</td><td class="fielddoc"><p >64 microsteps per step, max speed 1.25 RPM </p>
+<tr><td class="fieldname"><a id="a0d45be38e9ecba41e9d78d79b0fc27b2a7bcc57c67ee5759f389b94250fdb33f9" name="a0d45be38e9ecba41e9d78d79b0fc27b2a7bcc57c67ee5759f389b94250fdb33f9"></a>STEP64&#160;</td><td class="fielddoc"><p >64 microsteps per step, max speed 1.25 RPM. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a0d45be38e9ecba41e9d78d79b0fc27b2a59715515f268bc2540aec8e8f48cad80" name="a0d45be38e9ecba41e9d78d79b0fc27b2a59715515f268bc2540aec8e8f48cad80"></a>STEP128&#160;</td><td class="fielddoc"><p >128 microsteps per step, max speed 0.625 RPM </p>
+<tr><td class="fieldname"><a id="a0d45be38e9ecba41e9d78d79b0fc27b2a59715515f268bc2540aec8e8f48cad80" name="a0d45be38e9ecba41e9d78d79b0fc27b2a59715515f268bc2540aec8e8f48cad80"></a>STEP128&#160;</td><td class="fielddoc"><p >128 microsteps per step, max speed 0.625 RPM. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a0d45be38e9ecba41e9d78d79b0fc27b2af003b8d97735e555f445a2f49c49e29a" name="a0d45be38e9ecba41e9d78d79b0fc27b2af003b8d97735e555f445a2f49c49e29a"></a>STEP256&#160;</td><td class="fielddoc"><p >256 microsteps per step, max speed 0.3125 RPM </p>
+<tr><td class="fieldname"><a id="a0d45be38e9ecba41e9d78d79b0fc27b2af003b8d97735e555f445a2f49c49e29a" name="a0d45be38e9ecba41e9d78d79b0fc27b2af003b8d97735e555f445a2f49c49e29a"></a>STEP256&#160;</td><td class="fielddoc"><p >256 microsteps per step, max speed 0.3125 RPM. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a0d45be38e9ecba41e9d78d79b0fc27b2ae1e6922d622ad0b67d0242f3d118b642" name="a0d45be38e9ecba41e9d78d79b0fc27b2ae1e6922d622ad0b67d0242f3d118b642"></a>STEP512&#160;</td><td class="fielddoc"><p >512 microsteps per step, max speed 0.15625 RPM </p>
+<tr><td class="fieldname"><a id="a0d45be38e9ecba41e9d78d79b0fc27b2ae1e6922d622ad0b67d0242f3d118b642" name="a0d45be38e9ecba41e9d78d79b0fc27b2ae1e6922d622ad0b67d0242f3d118b642"></a>STEP512&#160;</td><td class="fielddoc"><p >512 microsteps per step, max speed 0.15625 RPM. </p>
 </td></tr>
 </table>
 

@@ -1,6 +1,19 @@
 var searchData=
 [
-  ['release_0',['release',['../class_adafruit_1_1_stepper_motor.html#ab5862130756e1582d6d5399e39fbc786',1,'Adafruit::StepperMotor']]],
-  ['release_1',['RELEASE',['../_motor_shield_8hpp.html#a455b5ec91eee280182e0b5d49a95c00ea999d20697968041a86cd3ac44c1ad149',1,'Adafruit']]],
-  ['run_2',['run',['../class_adafruit_1_1_d_c_motor.html#a1712f5c9c987beced6daa81c48a9e64b',1,'Adafruit::DCMotor']]]
+  ['setpin_0',['setPin',['../class_adafruit_1_1_motor_shield.html#a0f0ba9c35f16aa1ca8ab7dcfc9401e38',1,'Adafruit::MotorShield']]],
+  ['setpwm_1',['setPWM',['../class_adafruit_1_1_motor_shield.html#ac48f252f50f9fd8474c14d0916417e89',1,'Adafruit::MotorShield']]],
+  ['setspeed_2',['setSpeed',['../class_adafruit_1_1_d_c_motor.html#a05499074465820c8bd3f47dbbcb3d21a',1,'Adafruit::DCMotor::setSpeed()'],['../class_adafruit_1_1_stepper_motor.html#a93ff5a437f73545322a127345a08e0ee',1,'Adafruit::StepperMotor::setSpeed()']]],
+  ['setspeedfine_3',['setSpeedFine',['../class_adafruit_1_1_d_c_motor.html#a69adcf95474995731f86b0282e5c60a7',1,'Adafruit::DCMotor']]],
+  ['setstep_4',['setStep',['../class_adafruit_1_1_stepper_motor.html#a39ed3d57b98e73017d5024ed996e619a',1,'Adafruit::StepperMotor']]],
+  ['single_5',['SINGLE',['../_motor_shield_8hpp.html#a5799640d7b068882d2b4c51ee30d1834afeaea1361c5fa66ca7c505f0d5e124b8',1,'Adafruit']]],
+  ['step_6',['step',['../class_adafruit_1_1_stepper_motor.html#a2f8f5ef39dbed1fc38c2a073c0f0e370',1,'Adafruit::StepperMotor']]],
+  ['step128_7',['STEP128',['../_motor_shield_8hpp.html#a0d45be38e9ecba41e9d78d79b0fc27b2a59715515f268bc2540aec8e8f48cad80',1,'Adafruit']]],
+  ['step16_8',['STEP16',['../_motor_shield_8hpp.html#a0d45be38e9ecba41e9d78d79b0fc27b2aac2bcb497fcc43284fa14642d51a4ba0',1,'Adafruit']]],
+  ['step256_9',['STEP256',['../_motor_shield_8hpp.html#a0d45be38e9ecba41e9d78d79b0fc27b2af003b8d97735e555f445a2f49c49e29a',1,'Adafruit']]],
+  ['step32_10',['STEP32',['../_motor_shield_8hpp.html#a0d45be38e9ecba41e9d78d79b0fc27b2a553d18c636286385f261a82affd34aad',1,'Adafruit']]],
+  ['step512_11',['STEP512',['../_motor_shield_8hpp.html#a0d45be38e9ecba41e9d78d79b0fc27b2ae1e6922d622ad0b67d0242f3d118b642',1,'Adafruit']]],
+  ['step64_12',['STEP64',['../_motor_shield_8hpp.html#a0d45be38e9ecba41e9d78d79b0fc27b2a7bcc57c67ee5759f389b94250fdb33f9',1,'Adafruit']]],
+  ['step8_13',['STEP8',['../_motor_shield_8hpp.html#a0d45be38e9ecba41e9d78d79b0fc27b2a210e813f5e8e59873bee74e0d9725dbf',1,'Adafruit']]],
+  ['steppermotor_14',['StepperMotor',['../class_adafruit_1_1_stepper_motor.html',1,'Adafruit::StepperMotor'],['../class_adafruit_1_1_stepper_motor.html#ab3b58a9ff9ebd97f102d2b72e37980f0',1,'Adafruit::StepperMotor::StepperMotor(void)']]],
+  ['stopmotor_15',['stopMotor',['../class_adafruit_1_1_stepper_motor.html#a92f794f60a812964e9c914be3bbbae50',1,'Adafruit::StepperMotor']]]
 ];

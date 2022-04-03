@@ -21,7 +21,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Adafruit Motor Shield v2 Linux Driver<span id="projectnumber">&#160;1.1.0</span>
+   <div id="projectname">Adafruit Motor Shield v2 Linux Driver<span id="projectnumber">&#160;2.0.0</span>
    </div>
   </td>
  </tr>
@@ -80,34 +80,35 @@ $(function() {
  <a href="class_adafruit_1_1_stepper_motor.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="_motor_shield_8hpp_source.html">MotorShield.hpp</a>&gt;</code></p>
-<div class="dynheader">
-Inheritance diagram for Adafruit::StepperMotor:</div>
-<div class="dyncontent">
- <div class="center">
-  <img src="class_adafruit_1_1_stepper_motor.png" usemap="#Adafruit::StepperMotor_map" alt=""/>
-  <map id="Adafruit::StepperMotor_map" name="Adafruit::StepperMotor_map">
-<area href="class_adafruit_1_1_stepper_motor_a.html" title="Object that controls and keeps state for a single stepper motor, with advanced location tracking and ..." alt="Adafruit::StepperMotorA" shape="rect" coords="0,56,149,80"/>
-  </map>
-</div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a81aa004f0e23f8462d469fb2a41e26e8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit_1_1_stepper_motor.html#a81aa004f0e23f8462d469fb2a41e26e8">setSpeed</a> (double rpm)</td></tr>
-<tr class="memdesc:a81aa004f0e23f8462d469fb2a41e26e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the delay for the Stepper Motor speed in RPM.  <a href="class_adafruit_1_1_stepper_motor.html#a81aa004f0e23f8462d469fb2a41e26e8">More...</a><br /></td></tr>
-<tr class="separator:a81aa004f0e23f8462d469fb2a41e26e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8a08847a002c80febbc6f86c7a72004f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit_1_1_stepper_motor.html#a8a08847a002c80febbc6f86c7a72004f">step</a> (uint16_t steps, <a class="el" href="_motor_shield_8hpp.html#a455b5ec91eee280182e0b5d49a95c00e">MotorDir</a> dir, <a class="el" href="_motor_shield_8hpp.html#a5799640d7b068882d2b4c51ee30d1834">MotorStyle</a> style=SINGLE)</td></tr>
-<tr class="memdesc:a8a08847a002c80febbc6f86c7a72004f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move the stepper motor with the given RPM speed, at the speed set using <code><a class="el" href="class_adafruit_1_1_stepper_motor.html#a81aa004f0e23f8462d469fb2a41e26e8">Adafruit::StepperMotor::setSpeed</a></code>.  <a href="class_adafruit_1_1_stepper_motor.html#a8a08847a002c80febbc6f86c7a72004f">More...</a><br /></td></tr>
-<tr class="separator:a8a08847a002c80febbc6f86c7a72004f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a93ff5a437f73545322a127345a08e0ee"><td class="memItemLeft" align="right" valign="top">bool <a class="el" href="_motor_shield_8hpp.html#a617f96d75b265f3aa1f392a3cce50e93">_Catchable</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit_1_1_stepper_motor.html#a93ff5a437f73545322a127345a08e0ee">setSpeed</a> (double rpm)</td></tr>
+<tr class="memdesc:a93ff5a437f73545322a127345a08e0ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the delay for the Stepper Motor speed in RPM. Throws exception in case rpm &lt;= 0.  <a href="class_adafruit_1_1_stepper_motor.html#a93ff5a437f73545322a127345a08e0ee">More...</a><br /></td></tr>
+<tr class="separator:a93ff5a437f73545322a127345a08e0ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f8f5ef39dbed1fc38c2a073c0f0e370"><td class="memItemLeft" align="right" valign="top">void <a class="el" href="_motor_shield_8hpp.html#a617f96d75b265f3aa1f392a3cce50e93">_Catchable</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit_1_1_stepper_motor.html#a2f8f5ef39dbed1fc38c2a073c0f0e370">step</a> (uint16_t steps, <a class="el" href="_motor_shield_8hpp.html#a455b5ec91eee280182e0b5d49a95c00e">MotorDir</a> dir, <a class="el" href="_motor_shield_8hpp.html#a5799640d7b068882d2b4c51ee30d1834">MotorStyle</a> style=SINGLE, bool blocking=true)</td></tr>
+<tr class="memdesc:a2f8f5ef39dbed1fc38c2a073c0f0e370"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move the stepper motor with the given RPM speed, at the speed set using <code><a class="el" href="class_adafruit_1_1_stepper_motor.html#a93ff5a437f73545322a127345a08e0ee">Adafruit::StepperMotor::setSpeed</a></code>. Throws exception if RPM was not set prior to call.  <a href="class_adafruit_1_1_stepper_motor.html#a2f8f5ef39dbed1fc38c2a073c0f0e370">More...</a><br /></td></tr>
+<tr class="separator:a2f8f5ef39dbed1fc38c2a073c0f0e370"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af3c94c64991e4ede721d9695c10563e0"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit_1_1_stepper_motor.html#af3c94c64991e4ede721d9695c10563e0">onestep</a> (<a class="el" href="_motor_shield_8hpp.html#a455b5ec91eee280182e0b5d49a95c00e">MotorDir</a> dir, <a class="el" href="_motor_shield_8hpp.html#a5799640d7b068882d2b4c51ee30d1834">MotorStyle</a> style)</td></tr>
-<tr class="memdesc:af3c94c64991e4ede721d9695c10563e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move the stepper motor by one step. No delays implemented.  <a href="class_adafruit_1_1_stepper_motor.html#af3c94c64991e4ede721d9695c10563e0">More...</a><br /></td></tr>
+<tr class="memdesc:af3c94c64991e4ede721d9695c10563e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move the stepper motor by one step. No delays implemented. Care must be taken while using onestep, especially regarding stopping at a non-integral step while microstepping. Use this function in conjunction with <code><a class="el" href="class_adafruit_1_1_stepper_motor.html#a1e72b487707e979f3360d188bfabb89e">Adafruit::StepperMotor::getStepPeriod</a></code> function that gives the time (in microseconds) required to execute a full step.  <a href="class_adafruit_1_1_stepper_motor.html#af3c94c64991e4ede721d9695c10563e0">More...</a><br /></td></tr>
 <tr class="separator:af3c94c64991e4ede721d9695c10563e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acbcedcb1188472de749564494c0dc03c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit_1_1_stepper_motor.html#acbcedcb1188472de749564494c0dc03c">setStep</a> (<a class="el" href="_motor_shield_8hpp.html#a0d45be38e9ecba41e9d78d79b0fc27b2">MicroSteps</a> microsteps)</td></tr>
-<tr class="memdesc:acbcedcb1188472de749564494c0dc03c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set microsteps per step.  <a href="class_adafruit_1_1_stepper_motor.html#acbcedcb1188472de749564494c0dc03c">More...</a><br /></td></tr>
-<tr class="separator:acbcedcb1188472de749564494c0dc03c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a39ed3d57b98e73017d5024ed996e619a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit_1_1_stepper_motor.html#a39ed3d57b98e73017d5024ed996e619a">setStep</a> (<a class="el" href="_motor_shield_8hpp.html#a0d45be38e9ecba41e9d78d79b0fc27b2">MicroSteps</a> microsteps)</td></tr>
+<tr class="memdesc:a39ed3d57b98e73017d5024ed996e619a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set microsteps per step.  <a href="class_adafruit_1_1_stepper_motor.html#a39ed3d57b98e73017d5024ed996e619a">More...</a><br /></td></tr>
+<tr class="separator:a39ed3d57b98e73017d5024ed996e619a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab5862130756e1582d6d5399e39fbc786"><td class="memItemLeft" align="right" valign="top"><a id="ab5862130756e1582d6d5399e39fbc786" name="ab5862130756e1582d6d5399e39fbc786"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>release</b> (void)</td></tr>
 <tr class="memdesc:ab5862130756e1582d6d5399e39fbc786"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release all pins of the stepper motor so it free-spins. <br /></td></tr>
 <tr class="separator:ab5862130756e1582d6d5399e39fbc786"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a80ba8412b6a5e361fb0aec69b27f98d7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit_1_1_stepper_motor.html#a80ba8412b6a5e361fb0aec69b27f98d7">isMoving</a> () const</td></tr>
+<tr class="memdesc:a80ba8412b6a5e361fb0aec69b27f98d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the motor is stepping.  <a href="class_adafruit_1_1_stepper_motor.html#a80ba8412b6a5e361fb0aec69b27f98d7">More...</a><br /></td></tr>
+<tr class="separator:a80ba8412b6a5e361fb0aec69b27f98d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a92f794f60a812964e9c914be3bbbae50"><td class="memItemLeft" align="right" valign="top"><a id="a92f794f60a812964e9c914be3bbbae50" name="a92f794f60a812964e9c914be3bbbae50"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>stopMotor</b> ()</td></tr>
+<tr class="memdesc:a92f794f60a812964e9c914be3bbbae50"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stop stepping the motor. <br /></td></tr>
+<tr class="separator:a92f794f60a812964e9c914be3bbbae50"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e72b487707e979f3360d188bfabb89e"><td class="memItemLeft" align="right" valign="top">uint64_t <a class="el" href="_motor_shield_8hpp.html#a617f96d75b265f3aa1f392a3cce50e93">_Catchable</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit_1_1_stepper_motor.html#a1e72b487707e979f3360d188bfabb89e">getStepPeriod</a> () const</td></tr>
+<tr class="memdesc:a1e72b487707e979f3360d188bfabb89e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the time period of each full step. The time period is useful in case of onestepping/manual stepping. Throws exception if RPM was not set prior to call.  <a href="class_adafruit_1_1_stepper_motor.html#a1e72b487707e979f3360d188bfabb89e">More...</a><br /></td></tr>
+<tr class="separator:a1e72b487707e979f3360d188bfabb89e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -135,6 +136,46 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>MotorShield</b></td>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Object that controls and keeps state for a single stepper motor. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a1e72b487707e979f3360d188bfabb89e" name="a1e72b487707e979f3360d188bfabb89e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1e72b487707e979f3360d188bfabb89e">&#9670;&nbsp;</a></span>getStepPeriod()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint64_t <a class="el" href="_motor_shield_8hpp.html#a617f96d75b265f3aa1f392a3cce50e93">_Catchable</a> Adafruit::StepperMotor::getStepPeriod </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the time period of each full step. The time period is useful in case of onestepping/manual stepping. Throws exception if RPM was not set prior to call. </p>
+<dl class="section return"><dt>Returns</dt><dd>uint64_t Time period of a full step </dd></dl>
+
+</div>
+</div>
+<a id="a80ba8412b6a5e361fb0aec69b27f98d7" name="a80ba8412b6a5e361fb0aec69b27f98d7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a80ba8412b6a5e361fb0aec69b27f98d7">&#9670;&nbsp;</a></span>isMoving()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Adafruit::StepperMotor::isMoving </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Check if the motor is stepping. </p>
+<dl class="section return"><dt>Returns</dt><dd>bool True if stepping, false otherwise. </dd></dl>
+
+</div>
+</div>
 <a id="af3c94c64991e4ede721d9695c10563e0" name="af3c94c64991e4ede721d9695c10563e0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af3c94c64991e4ede721d9695c10563e0">&#9670;&nbsp;</a></span>onestep()</h2>
 
@@ -161,7 +202,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>MotorShield</b></td>
       </table>
 </div><div class="memdoc">
 
-<p>Move the stepper motor by one step. No delays implemented. </p>
+<p>Move the stepper motor by one step. No delays implemented. Care must be taken while using onestep, especially regarding stopping at a non-integral step while microstepping. Use this function in conjunction with <code><a class="el" href="class_adafruit_1_1_stepper_motor.html#a1e72b487707e979f3360d188bfabb89e">Adafruit::StepperMotor::getStepPeriod</a></code> function that gives the time (in microseconds) required to execute a full step. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">dir</td><td>The direction of movement, can be FORWARD or BACKWARD. </td></tr>
@@ -173,14 +214,14 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>MotorShield</b></td>
 
 </div>
 </div>
-<a id="a81aa004f0e23f8462d469fb2a41e26e8" name="a81aa004f0e23f8462d469fb2a41e26e8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a81aa004f0e23f8462d469fb2a41e26e8">&#9670;&nbsp;</a></span>setSpeed()</h2>
+<a id="a93ff5a437f73545322a127345a08e0ee" name="a93ff5a437f73545322a127345a08e0ee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a93ff5a437f73545322a127345a08e0ee">&#9670;&nbsp;</a></span>setSpeed()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void Adafruit::StepperMotor::setSpeed </td>
+          <td class="memname">bool <a class="el" href="_motor_shield_8hpp.html#a617f96d75b265f3aa1f392a3cce50e93">_Catchable</a> Adafruit::StepperMotor::setSpeed </td>
           <td>(</td>
           <td class="paramtype">double&#160;</td>
           <td class="paramname"><em>rpm</em></td><td>)</td>
@@ -189,24 +230,25 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>MotorShield</b></td>
       </table>
 </div><div class="memdoc">
 
-<p>Set the delay for the Stepper Motor speed in RPM. </p>
+<p>Set the delay for the Stepper Motor speed in RPM. Throws exception in case rpm &lt;= 0. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">rpm</td><td>The desired RPM, it is not guaranteed to be achieved. In double coil mode upto ~68 RPM is achieved for a 200 steps/rev stepper, in microstep mode ~1.25 RPM is achieved for a 200 steps/rev stepper at STEP64 setting, ~0.3125 RPM at STEP256 setting. </td></tr>
+    <tr><td class="paramname">rpm</td><td>The desired RPM, it is not guaranteed to be achieved. In double coil mode upto ~68 RPM is achieved for a 200 steps/rev stepper, in microstep mode ~1.25 RPM is achieved for a 200 steps/rev stepper at STEP64 setting, ~0.3125 RPM at STEP256 setting.</td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>bool true on success, false on failure. </dd></dl>
 
 </div>
 </div>
-<a id="acbcedcb1188472de749564494c0dc03c" name="acbcedcb1188472de749564494c0dc03c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acbcedcb1188472de749564494c0dc03c">&#9670;&nbsp;</a></span>setStep()</h2>
+<a id="a39ed3d57b98e73017d5024ed996e619a" name="a39ed3d57b98e73017d5024ed996e619a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a39ed3d57b98e73017d5024ed996e619a">&#9670;&nbsp;</a></span>setStep()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void Adafruit::StepperMotor::setStep </td>
+          <td class="memname">bool Adafruit::StepperMotor::setStep </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="_motor_shield_8hpp.html#a0d45be38e9ecba41e9d78d79b0fc27b2">MicroSteps</a>&#160;</td>
           <td class="paramname"><em>microsteps</em></td><td>)</td>
@@ -218,21 +260,22 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>MotorShield</b></td>
 <p>Set microsteps per step. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">microsteps</td><td><code><a class="el" href="">Adafruit::MicroSteps</a></code> members. </td></tr>
+    <tr><td class="paramname">microsteps</td><td><code><a class="el" href="">Adafruit::MicroSteps</a></code> members.</td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>bool true on success, false on failure. </dd></dl>
 
 </div>
 </div>
-<a id="a8a08847a002c80febbc6f86c7a72004f" name="a8a08847a002c80febbc6f86c7a72004f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8a08847a002c80febbc6f86c7a72004f">&#9670;&nbsp;</a></span>step()</h2>
+<a id="a2f8f5ef39dbed1fc38c2a073c0f0e370" name="a2f8f5ef39dbed1fc38c2a073c0f0e370"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2f8f5ef39dbed1fc38c2a073c0f0e370">&#9670;&nbsp;</a></span>step()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void Adafruit::StepperMotor::step </td>
+          <td class="memname">void <a class="el" href="_motor_shield_8hpp.html#a617f96d75b265f3aa1f392a3cce50e93">_Catchable</a> Adafruit::StepperMotor::step </td>
           <td>(</td>
           <td class="paramtype">uint16_t&#160;</td>
           <td class="paramname"><em>steps</em>, </td>
@@ -247,7 +290,13 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>MotorShield</b></td>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="_motor_shield_8hpp.html#a5799640d7b068882d2b4c51ee30d1834">MotorStyle</a>&#160;</td>
-          <td class="paramname"><em>style</em> = <code>SINGLE</code>&#160;</td>
+          <td class="paramname"><em>style</em> = <code>SINGLE</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>blocking</em> = <code>true</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -257,12 +306,13 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>MotorShield</b></td>
       </table>
 </div><div class="memdoc">
 
-<p>Move the stepper motor with the given RPM speed, at the speed set using <code><a class="el" href="class_adafruit_1_1_stepper_motor.html#a81aa004f0e23f8462d469fb2a41e26e8">Adafruit::StepperMotor::setSpeed</a></code>. </p>
+<p>Move the stepper motor with the given RPM speed, at the speed set using <code><a class="el" href="class_adafruit_1_1_stepper_motor.html#a93ff5a437f73545322a127345a08e0ee">Adafruit::StepperMotor::setSpeed</a></code>. Throws exception if RPM was not set prior to call. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">steps</td><td>Number of steps to move. </td></tr>
     <tr><td class="paramname">dir</td><td>The direction of movement, can be FORWARD or BACKWARD. </td></tr>
-    <tr><td class="paramname">style</td><td>Stepping style, can be SINGLE, DOUBLE, INTERLEAVE or MICROSTEP. </td></tr>
+    <tr><td class="paramname">style</td><td>Stepping style, can be SINGLE, DOUBLE, INTERLEAVE or MICROSTEP. SINGLE by default. </td></tr>
+    <tr><td class="paramname">blocking</td><td>Whether the step function blocks until stepping is complete. Set to true by default. </td></tr>
   </table>
   </dd>
 </dl>

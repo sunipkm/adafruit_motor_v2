@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['adafruit_5fmotorshield_5fdebug_0',['ADAFRUIT_MOTORSHIELD_DEBUG',['../_motor_shield_8hpp.html#a33d3dcaaca4795feb97edbcd55b37dfc',1,'MotorShield.hpp']]]
+  ['_5fcatchable_0',['_Catchable',['../_motor_shield_8hpp.html#a617f96d75b265f3aa1f392a3cce50e93',1,'MotorShield.hpp']]]
 ];

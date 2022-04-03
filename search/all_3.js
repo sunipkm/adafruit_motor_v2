@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['forward_0',['FORWARD',['../_motor_shield_8hpp.html#a455b5ec91eee280182e0b5d49a95c00ea6bc50908622579ad5f0e3f8f1b5f550c',1,'Adafruit']]],
-  ['fulloff_1',['fullOff',['../class_adafruit_1_1_d_c_motor.html#afa083071da39ddfb3fa5a03a93867dd2',1,'Adafruit::DCMotor']]],
-  ['fullon_2',['fullOn',['../class_adafruit_1_1_d_c_motor.html#a2004768f5398152c082da93e9cc23526',1,'Adafruit::DCMotor']]]
+  ['dcmotor_0',['DCMotor',['../class_adafruit_1_1_d_c_motor.html',1,'Adafruit']]],
+  ['double_1',['DOUBLE',['../_motor_shield_8hpp.html#a5799640d7b068882d2b4c51ee30d1834a1f262e50aa8b95e39ed877df4fbb2f87',1,'Adafruit']]]
 ];

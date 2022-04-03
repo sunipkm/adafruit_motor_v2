@@ -21,7 +21,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Adafruit Motor Shield v2 Linux Driver<span id="projectnumber">&#160;1.1.0</span>
+   <div id="projectname">Adafruit Motor Shield v2 Linux Driver<span id="projectnumber">&#160;2.0.0</span>
    </div>
   </td>
  </tr>
@@ -87,18 +87,15 @@ Public Member Functions</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><b>~MotorShield</b> ()</td></tr>
 <tr class="memdesc:a57e74100defa02a0fb4be8a3f765acc1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release all motors and the I2C Bus. <br /></td></tr>
 <tr class="separator:a57e74100defa02a0fb4be8a3f765acc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa8b4ba9acef70d60f1117dee9ce665f8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit_1_1_motor_shield.html#aa8b4ba9acef70d60f1117dee9ce665f8">begin</a> (uint16_t freq=1600)</td></tr>
-<tr class="memdesc:aa8b4ba9acef70d60f1117dee9ce665f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the I2C hardware and PWM driver, then turn off all pins.  <a href="class_adafruit_1_1_motor_shield.html#aa8b4ba9acef70d60f1117dee9ce665f8">More...</a><br /></td></tr>
-<tr class="separator:aa8b4ba9acef70d60f1117dee9ce665f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7aab0b3edf21a30afbef558d588547f3"><td class="memItemLeft" align="right" valign="top">bool <a class="el" href="_motor_shield_8hpp.html#a617f96d75b265f3aa1f392a3cce50e93">_Catchable</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit_1_1_motor_shield.html#a7aab0b3edf21a30afbef558d588547f3">begin</a> (uint16_t freq=1600)</td></tr>
+<tr class="memdesc:a7aab0b3edf21a30afbef558d588547f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the I2C hardware and PWM driver, then turn off all pins.  <a href="class_adafruit_1_1_motor_shield.html#a7aab0b3edf21a30afbef558d588547f3">More...</a><br /></td></tr>
+<tr class="separator:a7aab0b3edf21a30afbef558d588547f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a58c2b66d36f8ef874e89fac311705d06"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_adafruit_1_1_d_c_motor.html">DCMotor</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit_1_1_motor_shield.html#a58c2b66d36f8ef874e89fac311705d06">getMotor</a> (uint8_t n)</td></tr>
 <tr class="memdesc:a58c2b66d36f8ef874e89fac311705d06"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a pointer to an already-allocated <code><a class="el" href="class_adafruit_1_1_d_c_motor.html">Adafruit::DCMotor</a></code> object. Initializes the DC motor and turns off all pins.  <a href="class_adafruit_1_1_motor_shield.html#a58c2b66d36f8ef874e89fac311705d06">More...</a><br /></td></tr>
 <tr class="separator:a58c2b66d36f8ef874e89fac311705d06"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0f2235f67aefa9fc9000b73b08ab1a83"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_adafruit_1_1_stepper_motor.html">StepperMotor</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit_1_1_motor_shield.html#a0f2235f67aefa9fc9000b73b08ab1a83">getStepper</a> (uint16_t steps, uint8_t port, <a class="el" href="_motor_shield_8hpp.html#a0d45be38e9ecba41e9d78d79b0fc27b2">MicroSteps</a> microsteps=STEP16)</td></tr>
 <tr class="memdesc:a0f2235f67aefa9fc9000b73b08ab1a83"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a pointer to an already-allocated <code><a class="el" href="class_adafruit_1_1_stepper_motor.html">Adafruit::StepperMotor</a></code> object with a given steps per rotation. Initializes the stepper motor and turns off all pins.  <a href="class_adafruit_1_1_motor_shield.html#a0f2235f67aefa9fc9000b73b08ab1a83">More...</a><br /></td></tr>
 <tr class="separator:a0f2235f67aefa9fc9000b73b08ab1a83"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6d18cb89ab0b9980efb533605f42ab79"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_adafruit_1_1_stepper_motor_a.html">StepperMotorA</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit_1_1_motor_shield.html#a6d18cb89ab0b9980efb533605f42ab79">getStepperA</a> (uint16_t steps, uint8_t port, <a class="el" href="_motor_shield_8hpp.html#a0d45be38e9ecba41e9d78d79b0fc27b2">MicroSteps</a> microsteps=STEP16)</td></tr>
-<tr class="memdesc:a6d18cb89ab0b9980efb533605f42ab79"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a pointer to an already-allocated <code><a class="el" href="class_adafruit_1_1_stepper_motor_a.html">Adafruit::StepperMotorA</a></code> object with a given steps per rotation. Initializes the stepper motor and turns off all pins.  <a href="class_adafruit_1_1_motor_shield.html#a6d18cb89ab0b9980efb533605f42ab79">More...</a><br /></td></tr>
-<tr class="separator:a6d18cb89ab0b9980efb533605f42ab79"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac48f252f50f9fd8474c14d0916417e89"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit_1_1_motor_shield.html#ac48f252f50f9fd8474c14d0916417e89">setPWM</a> (uint8_t pin, uint16_t val)</td></tr>
 <tr class="memdesc:ac48f252f50f9fd8474c14d0916417e89"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper that sets the PWM output on a pin and manages 'all on or off'.  <a href="class_adafruit_1_1_motor_shield.html#ac48f252f50f9fd8474c14d0916417e89">More...</a><br /></td></tr>
 <tr class="separator:ac48f252f50f9fd8474c14d0916417e89"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -147,14 +144,14 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="aa8b4ba9acef70d60f1117dee9ce665f8" name="aa8b4ba9acef70d60f1117dee9ce665f8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa8b4ba9acef70d60f1117dee9ce665f8">&#9670;&nbsp;</a></span>begin()</h2>
+<a id="a7aab0b3edf21a30afbef558d588547f3" name="a7aab0b3edf21a30afbef558d588547f3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7aab0b3edf21a30afbef558d588547f3">&#9670;&nbsp;</a></span>begin()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool Adafruit::MotorShield::begin </td>
+          <td class="memname">bool <a class="el" href="_motor_shield_8hpp.html#a617f96d75b265f3aa1f392a3cce50e93">_Catchable</a> Adafruit::MotorShield::begin </td>
           <td>(</td>
           <td class="paramtype">uint16_t&#160;</td>
           <td class="paramname"><em>freq</em> = <code>1600</code></td><td>)</td>
@@ -243,51 +240,6 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="class_adafruit_1_1_stepper_motor.html" title="Object that controls and keeps state for a single stepper motor.">Adafruit::StepperMotor</a>* NULL on error, valid pointer on success. </dd></dl>
-
-</div>
-</div>
-<a id="a6d18cb89ab0b9980efb533605f42ab79" name="a6d18cb89ab0b9980efb533605f42ab79"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6d18cb89ab0b9980efb533605f42ab79">&#9670;&nbsp;</a></span>getStepperA()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_adafruit_1_1_stepper_motor_a.html">StepperMotorA</a> * Adafruit::MotorShield::getStepperA </td>
-          <td>(</td>
-          <td class="paramtype">uint16_t&#160;</td>
-          <td class="paramname"><em>steps</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>port</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="_motor_shield_8hpp.html#a0d45be38e9ecba41e9d78d79b0fc27b2">MicroSteps</a>&#160;</td>
-          <td class="paramname"><em>microsteps</em> = <code>STEP16</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Returns a pointer to an already-allocated <code><a class="el" href="class_adafruit_1_1_stepper_motor_a.html">Adafruit::StepperMotorA</a></code> object with a given steps per rotation. Initializes the stepper motor and turns off all pins. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">steps</td><td>How many steps per revolution (used for RPM calculation). </td></tr>
-    <tr><td class="paramname">port</td><td>The stepper motor port to be used: only 1 or 2 are valid. </td></tr>
-    <tr><td class="paramname">microsteps</td><td>Number of microsteps per step to use. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="class_adafruit_1_1_stepper_motor_a.html" title="Object that controls and keeps state for a single stepper motor, with advanced location tracking and ...">Adafruit::StepperMotorA</a>* NULL on error, valid pointer on success. </dd></dl>
 
 </div>
 </div>
