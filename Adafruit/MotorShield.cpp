@@ -782,6 +782,7 @@ namespace Adafruit
             _this->cond.notify_all();
         }
     }
+
     void StepperMotor::stepThreadFn(StepperMotor *mot, uint16_t steps, MotorDir dir, MotorStyle style)
     {
         std::unique_lock<std::mutex> lock(mot->cs);
