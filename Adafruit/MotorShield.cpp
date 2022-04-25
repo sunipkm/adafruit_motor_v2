@@ -23,13 +23,14 @@
 #include <algorithm>
 #include <thread>
 #include <vector>
+#include <list>
 
 #ifndef _DOXYGEN_
 #define LOW 0
 #define HIGH 1
 
-static std::vector<void *> lib_steppers;
-static std::vector<void *> lib_dcmotors;
+static std::list<void *> lib_steppers;
+static std::list<void *> lib_dcmotors;
 static std::mutex handler_lock;
 
 static void sigHandler(int sig)
@@ -210,7 +211,7 @@ namespace Adafruit
         for (int i = 0; i < 4; i++)
         {
             // remove motor from list of vectors for signal handler
-            for (std::vector<void *>::iterator it = lib_dcmotors.begin(); it != lib_dcmotors.end(); it++)
+            for (std::list<void *>::iterator it = lib_dcmotors.begin(); it != lib_dcmotors.end(); it++)
             {
                 if ((*it) == (void *)&dcmotors[i])
                 {
@@ -225,7 +226,7 @@ namespace Adafruit
         }
         for (int i = 0; i < 2; i++)
         {
-            for (std::vector<void *>::iterator it = lib_steppers.begin(); it != lib_steppers.end(); it++)
+            for (std::list<void *>::iterator it = lib_steppers.begin(); it != lib_steppers.end(); it++)
             {
                 if ((*it) == (void *)&steppers[i])
                 {
