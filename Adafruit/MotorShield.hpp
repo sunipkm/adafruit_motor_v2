@@ -4,7 +4,7 @@
  * @brief This is the library for the Adafruit Motor Shield V2 for Arduino.
  * It supports DC motors & Stepper motors with microstepping as well
  * as stacking-support. It is *not* compatible with the V1 library.
- * @version 2.0.0
+ * @version 2.1.0
  * @date 2022-03-24
  *
  * @copyright Copyright (c) 2022
@@ -32,7 +32,6 @@
 
 #include <unistd.h>
 #include <stdint.h>
-#include <signal.h>
 #include "i2cbus/i2cbus.h"
 #include "clkgen.h"
 
@@ -55,6 +54,27 @@ namespace Adafruit
 #elif ADAFRUIT_MOTORSHIELD_DEBUG > 0
 #define MEB_DBGLVL MEB_DBG_ALL
 #endif // ADAFURUIT_MOTORSHIELD_DEBUG
+
+#ifdef _DOXYGEN_
+
+/**
+ * @brief Disable stopping of motors at interrupt signal (SIGINT).
+ * 
+ */
+#define ADAFRUIT_DISABLE_SIGINT
+
+/**
+ * @brief Enable stopping of motors at SIGHUP.
+ * 
+ */
+#define ADAFRUIT_ENABLE_SIGHUP
+
+/**
+ * @brief Enable stopping of motors at SIGPIPE.
+ * 
+ */
+#define ADAFRUIT_ENABLE_SIGPIPE
+#endif
 
 /**
  * @brief Indicates the function throws exceptions
@@ -247,7 +267,7 @@ namespace Adafruit
         /**
          * @brief Set microsteps per step.
          *
-         * @param microsteps {@link Adafruit::MicroSteps} members.
+         * @param microsteps {\@link Adafruit::MicroSteps} members.
          *
          * @return bool true on success, false on failure.
          */
@@ -296,7 +316,6 @@ namespace Adafruit
         uint16_t currentstep;
         MotorShield *MC;
         bool initd;
-        volatile sig_atomic_t *done;
         volatile bool moving;
         volatile bool stop;
     };

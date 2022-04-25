@@ -1,3 +1,13 @@
+## v2.1.0 (2022-04-25)
+### Release Highlights
+1. Enabled better handling of signals in the library.
+2. Fixed a bug where `SIGINT` would cause a stopped motor to not restart.
+3. Enabled support for disabling internal `SIGINT` handling, and enabling
+`SIGHUP` and/or `SIGPIPE` handling through compile-time flags.
+
+No changes have been made to the API in this release. The minor version
+number has been bumped up to indicate the internal overhaul.
+
 ## v2.0.0 (2022-03-24)
 ### Release Highlights
 1. Removed `StepperMotorA` class and associated `LimitSW` class.
