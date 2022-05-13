@@ -7,8 +7,8 @@
  * It supports DC motors & Stepper motors with microstepping as well
  * as stacking-support. It is *not* compatible with the V1 library.
  *
- * @version 2.1.0
- * @date 2022-03-24
+ * @version Refer to changelog.
+ * @date Refer to changelog.
  *
  * BSD license, all text here must be included in any redistribution.
  *
@@ -558,7 +558,7 @@ namespace Adafruit
         return false;
     }
 
-    void _Catchable StepperMotor::step(uint16_t steps, MotorDir dir, MotorStyle style, bool blocking)
+    void _Catchable StepperMotor::step(uint16_t steps, MotorDir dir, MotorStyle style, bool blocking, StepperMotorCB_t callback_fn, void *callback_fn_data)
     {
         if (usperstep == 0)
             throw std::runtime_error("RPM has to be set before stepping the motor.");
@@ -578,7 +578,7 @@ namespace Adafruit
                 dbprintlf("steps = %d", steps);
             }
             stop = false;
-            StepperMotorTimerData data = {this, steps, dir, style, microsteps};
+            StepperMotorTimerData data = {this, steps, dir, style, microsteps, callback_fn, callback_fn_data};
             clkgen_t clk = create_clk(uspers * 1000LLU, stepHandlerFn, &data);
             if (cond.wait_for(lock, std::chrono::microseconds(steps * uspers)) == std::cv_status::timeout)
             {
@@ -592,7 +592,7 @@ namespace Adafruit
         }
         else // non-blocking, spawn thread
         {
-            std::thread stepThread(stepThreadFn, this, steps, dir, style);
+            std::thread stepThread(stepThreadFn, this, steps, dir, style, callback_fn, callback_fn_data);
             stepThread.detach();
         }
     }
@@ -836,9 +836,13 @@ namespace Adafruit
             _this->moving = false;
             _this->cond.notify_all();
         }
+        if (_this->moving && (data->callback_fn != nullptr))
+        {
+            data->callback_fn(_this, data->callback_user_data);
+        }
     }
 
-    void StepperMotor::stepThreadFn(StepperMotor *mot, uint16_t steps, MotorDir dir, MotorStyle style)
+    void StepperMotor::stepThreadFn(StepperMotor *mot, uint16_t steps, MotorDir dir, MotorStyle style, StepperMotorCB_t callback_fn, void *callback_fn_data)
     {
         std::unique_lock<std::mutex> lock(mot->cs);
         uint64_t uspers = mot->usperstep;
@@ -853,7 +857,7 @@ namespace Adafruit
             steps *= mot->microsteps;
         }
         mot->stop = false;
-        StepperMotorTimerData data = {mot, steps, dir, style, mot->microsteps};
+        StepperMotorTimerData data = {mot, steps, dir, style, mot->microsteps, callback_fn, callback_fn_data};
         clkgen_t clk = create_clk(uspers * 1000LLU, stepHandlerFn, &data);
         if (mot->cond.wait_for(lock, std::chrono::microseconds(steps * uspers)) == std::cv_status::timeout)
         {

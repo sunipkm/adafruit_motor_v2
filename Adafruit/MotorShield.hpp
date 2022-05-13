@@ -4,8 +4,8 @@
  * @brief This is the library for the Adafruit Motor Shield V2 for Arduino.
  * It supports DC motors & Stepper motors with microstepping as well
  * as stacking-support. It is *not* compatible with the V1 library.
- * @version 2.1.0
- * @date 2022-03-24
+ * @version Refer to changelog.
+ * @date Refer to changelog.
  *
  * @copyright Copyright (c) 2022
  *
@@ -81,6 +81,14 @@ namespace Adafruit
  * 
  */
 #define _Catchable
+
+#if !defined(_Nullable)
+/**
+ * @brief Indicates the pointer argument can be NULL or nullptr.
+ * 
+ */
+#define _Nullable
+#endif
 
     /**
      * @brief Defines the stepping technique used to actuate stepper motors.
@@ -194,6 +202,18 @@ namespace Adafruit
 
 #ifndef _DOXYGEN_
     class StepperMotor;
+#endif
+
+    /**
+     * @brief Stepper motor callback function that is called after every step.
+     * 
+     * @param mot StepperMotor executing the callback.
+     * @param user_data User data pertaining to the callback.
+     * 
+     */
+    typedef void (*StepperMotorCB_t)(StepperMotor *mot, void *user_data);
+
+#ifndef _DOXYGEN_
     struct StepperMotorTimerData
     {
         StepperMotor *_this;
@@ -201,6 +221,8 @@ namespace Adafruit
         MotorDir dir;
         MotorStyle style;
         MicroSteps msteps;
+        StepperMotorCB_t callback_fn;
+        void *callback_user_data;
     };
 
     struct StepperMotorDestroyClkData
@@ -218,7 +240,7 @@ namespace Adafruit
     {
     private:
         static void stepHandlerFn(clkgen_t clk, void *data_);
-        static void stepThreadFn(StepperMotor *mot, uint16_t steps, MotorDir dir, MotorStyle style);
+        static void stepThreadFn(StepperMotor *mot, uint16_t steps, MotorDir dir, MotorStyle style, StepperMotorCB_t callback_fn, void *callback_fn_data);
 
     protected:
         /**
@@ -246,8 +268,10 @@ namespace Adafruit
          * @param dir The direction of movement, can be FORWARD or BACKWARD.
          * @param style Stepping style, can be SINGLE, DOUBLE, INTERLEAVE or MICROSTEP. SINGLE by default.
          * @param blocking Whether the step function blocks until stepping is complete. Set to true by default.
+         * @param callback_fn Optional callback function of type {@link StepperMotorCB_t} to be executed after each (micro)step. Note: The execution of the callback function removes the guarantee of the motor spinning at the speed set using {@link Adafruit::StepperMotor::setSpeed}.
+         * @param callback_fn_data Optional data to be passed to the callback function.
          */
-        void _Catchable step(uint16_t steps, MotorDir dir, MotorStyle style = SINGLE, bool blocking = true);
+        void _Catchable step(uint16_t steps, MotorDir dir, MotorStyle style = SINGLE, bool blocking = true, StepperMotorCB_t _Nullable callback_fn = NULL, void * _Nullable callback_fn_data = NULL);
 
         /**
          * @brief Move the stepper motor by one step. No delays implemented.

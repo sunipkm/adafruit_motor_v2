@@ -1,3 +1,7 @@
+## v2.2.0 (2022-05-13)
+### Release Highlights
+1. Added support for a callback function to be executed after each (micro)step.
+
 ## v2.1.0 (2022-04-25)
 ### Release Highlights
 1. Enabled better handling of signals in the library.

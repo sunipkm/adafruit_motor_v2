@@ -1,5 +1,5 @@
 PROJECT_NAME = "Adafruit Motor Shield v2 Linux Driver"
-PROJECT_NUMBER = "2.1.0"
+PROJECT_NUMBER = "2.2.0"
 INPUT = README.MD CHANGELOG.MD Adafruit/MotorShield.cpp Adafruit/MotorShield.hpp
 OUTPUT_DIRECTORY = doc
 USE_MDFILE_AS_MAINPAGE = README.MD

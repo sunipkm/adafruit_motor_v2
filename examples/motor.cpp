@@ -13,6 +13,13 @@ void sighandler(int sig)
     done = 1;
 }
 
+void motor_callback(Adafruit::StepperMotor *mot, void *user_data)
+{
+    int *val = (int *) user_data;
+    printf("From callback on %p: Remaining steps %d\n", mot, --(*val));
+    return;
+}
+
 int main()
 {
     signal(SIGINT, sighandler);
@@ -27,7 +34,9 @@ int main()
 
     uint64_t told = get_ts_now(), tnow = 0; // get starting timestamp
 
-    motor->step(200, state, Adafruit::MotorStyle::MICROSTEP); // double coil, one full rotation
+    int num_steps = 200;
+
+    motor->step(num_steps, state, Adafruit::MotorStyle::MICROSTEP, true, &motor_callback, &num_steps); // double coil, one full rotation
 
     tnow = get_ts_now();
     uint64_t tdelta = tnow - told;
