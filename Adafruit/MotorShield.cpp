@@ -823,22 +823,26 @@ namespace Adafruit
             _this->moving = true;
             _this->onestep(data->dir, data->style);
             data->steps--;
+            if (data->callback_fn != nullptr)
+            {
+                data->callback_fn(_this, data->callback_user_data);
+            }
             return; // can not let this reach the unblock check
         }
         else if (data->steps && !(_this->stop)) // integral step/not microstepping, no Ctrl+C received, emergency stop not pressed
         {
             _this->moving = true;
             _this->onestep(data->dir, data->style);
+            if (data->callback_fn != nullptr)
+            {
+                data->callback_fn(_this, data->callback_user_data);
+            }
             data->steps--;
         }
         if (data->steps == 0 || _this->stop) // end reached/done = 1
         {
             _this->moving = false;
             _this->cond.notify_all();
-        }
-        if (_this->moving && (data->callback_fn != nullptr))
-        {
-            data->callback_fn(_this, data->callback_user_data);
         }
     }
 
