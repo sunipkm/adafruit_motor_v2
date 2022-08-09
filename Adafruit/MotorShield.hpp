@@ -30,6 +30,10 @@
 #ifndef _MotorShield_hpp_
 #define _MotorShield_hpp_
 
+#if __cplusplus < 201103L
+#error "Minimum supported version: C++11"
+#endif
+
 #include <unistd.h>
 #include <stdint.h>
 #include "i2cbus/i2cbus.h"
@@ -353,12 +357,29 @@ namespace Adafruit
     {
     public:
         /**
-         * @brief Create the Motor Shield object at an I2C address (default: 0x60) on an I2C bus (default: 1).
+         * @brief Internal signal handler for stopping the motors on a signal.
+         * This function is registered if {@link Adafruit::Motorshield} is created with 
+         * register_sighandler = true (default behavior.) In most use cases, the
+         * {@link Adafruit::MotorShield} object is initialized after registering a
+         * signal handler. The library internally executes any such signal handler
+         * set up for SIGINT (and SIGHUP and SIGPIPE, if enabled) previously before
+         * creating the object. The user should not have to register this function
+         * for a signal, unless a previously unhandled signal by the library is
+         * intended to be handled.
+         * 
+         * @param sig Signal.
+         */
+        static void sighandler(int sig);
+        
+        /**
+         * @brief Create the Motor Shield object at an I2C address (default: 0x60) on an I2C bus (default: 1). Throws runtime error if sigaction() fails on register_sighandler = true.
          *
          * @param addr Optional, default: 0x60
          * @param bus Optional, default: 1
+         * @param register_sighandler Optional, registers handlers for SIGINT and SIGHUP.
+         * Executes previously set handler functions for these signals.
          */
-        MotorShield(uint8_t addr = 0x60, int bus = 1);
+        _Catchable MotorShield(uint8_t addr = 0x60, int bus = 1, bool register_sighandler = true);
 
         /**
          * @brief Release all motors and the I2C Bus.

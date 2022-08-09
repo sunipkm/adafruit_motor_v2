@@ -1,3 +1,7 @@
+## v3.0.0 (2022-08-09)
+1. Signal handler now executes the handler for SIGINT (and SIGHUP + SIGPIPE) registered prior to calling Adafruit::MotorShield().
+2. Exported library signal handler for external use (discouraged). 
+
 ## v2.2.0 (2022-05-13)
 ### Release Highlights
 1. Added support for a callback function to be executed after each (micro)step.

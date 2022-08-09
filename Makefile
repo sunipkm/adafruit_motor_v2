@@ -27,7 +27,7 @@ all: $(COBJS) $(CPPOBJS) $(EXAMPLEOBJS) $(LIBCLKGEN)
 	$(CXX) $(EDCXXFLAGS) -o $@ -c $<
 
 $(LIBCLKGEN):
-	cd clkgen && make && make ..
+	cd clkgen && make && cd ..
 
 .PHONY: clean doc
 
@@ -37,6 +37,7 @@ doc:
 clean:
 	rm -vf $(COBJS) $(CPPOBJS) $(EXAMPLEOBJS)
 	rm -vf *.out
+	cd clkgen && make clean && cd ..
 
 spotless: clean
 	rm -vrf doc

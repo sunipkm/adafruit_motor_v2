@@ -33,25 +33,42 @@ static std::list<void *> lib_steppers;
 static std::list<void *> lib_dcmotors;
 static std::mutex handler_lock;
 
-static void sigHandler(int sig)
-{
-    std::lock_guard<std::mutex>lock(handler_lock);
-    for (void *_stepper : lib_steppers)
-    {
-        Adafruit::StepperMotor *stepper = (Adafruit::StepperMotor *)_stepper;
-        stepper->stopMotor();
-    }
 
-    for (void *_dcmot : lib_dcmotors)
-    {
-        Adafruit::DCMotor *motor = (Adafruit::DCMotor *)_dcmot;
-        motor->fullOff();
-    }
-}
+static void (*old_handler_sigint)(int) = nullptr;
+static void (*old_handler_sighup)(int) = nullptr;
+#ifdef SIGPIPE
+static void (*old_handler_sigpipe)(int) = nullptr;
+#endif
+
 #endif // _DOXYGEN_
 
 namespace Adafruit
 {
+    void MotorShield::sighandler(int sig)
+    {
+        std::lock_guard<std::mutex> lock(handler_lock);
+        for (void *_stepper : lib_steppers)
+        {
+            Adafruit::StepperMotor *stepper = (Adafruit::StepperMotor *)_stepper;
+            stepper->stopMotor();
+        }
+
+        for (void *_dcmot : lib_dcmotors)
+        {
+            Adafruit::DCMotor *motor = (Adafruit::DCMotor *)_dcmot;
+            motor->fullOff();
+        }
+
+        if (old_handler_sigint != nullptr)
+            old_handler_sigint(sig);
+        if (old_handler_sighup != nullptr)
+            old_handler_sighup(sig);
+#ifdef SIGPIPE
+        if (old_handler_sigpipe != nullptr)
+            old_handler_sigpipe(sig);
+#endif
+    }
+
     /**
      * @brief Sinusoidal microstepping curve (sine curve between 0 and pi/2)
      * for the PWM output (12-bit range), with n + 1 points (in this case, n = 8).
@@ -187,27 +204,70 @@ namespace Adafruit
         4089, 4090, 4090, 4091, 4091, 4092, 4092, 4093, 4093, 4093, 4094,
         4094, 4094, 4094, 4094, 4094, 4094, 4095};
 
-    MotorShield::MotorShield(uint8_t addr, int bus)
+    MotorShield::MotorShield(uint8_t addr, int bus, bool register_sighandler)
     {
         _addr = addr;
         _bus = bus;
         initd = false;
-#ifndef ADAFRUIT_DISABLE_SIGINT
-        signal(SIGINT, sigHandler);
-#endif
+        if (register_sighandler)
+        {
+            struct sigaction sa, sa_old;
+            memset(&sa, 0x0, sizeof(struct sigaction));
+            memset(&sa_old, 0x0, sizeof(struct sigaction));
+            int ret = sigaction(SIGINT, NULL, &sa_old);
+            if (ret)
+            {
+                throw std::runtime_error("Error " + std::to_string(errno) + " getting old signal handler: " + std::string(strerror(errno)));
+            }
+            old_handler_sigint = sa_old.sa_handler;
+            sa.sa_handler = sighandler;
+            ret = sigaction(SIGINT, &sa, NULL);
+            if (ret)
+            {
+                throw std::runtime_error("Error " + std::to_string(errno) + " getting old signal handler: " + std::string(strerror(errno)));
+            }
+
 #ifdef ADAFRUIT_ENABLE_SIGHUP
-        signal(SIGHUP, sigHandler);
+            memset(&sa, 0x0, sizeof(struct sigaction));
+            memset(&sa_old, 0x0, sizeof(struct sigaction));
+            ret = sigaction(SIGHUP, NULL, &sa_old);
+            if (ret)
+            {
+                throw std::runtime_error("Error " + std::to_string(errno) + " getting old signal handler: " + std::string(strerror(errno)));
+            }
+            old_handler_sighup = sa_old.sa_handler;
+            sa.sa_handler = sighandler;
+            ret = sigaction(SIGINT, &sa, NULL);
+            if (ret)
+            {
+                throw std::runtime_error("Error " + std::to_string(errno) + " getting old signal handler: " + std::string(strerror(errno)));
+            }
 #endif
+
 #ifdef ADAFRUIT_ENABLE_SIGPIPE
 #ifdef SIGPIPE
-        signal(SIGPIPE, sigHandler);
+            memset(&sa, 0x0, sizeof(struct sigaction));
+            memset(&sa_old, 0x0, sizeof(struct sigaction));
+            ret = sigaction(SIGPIPE, NULL, &sa_old);
+            if (ret)
+            {
+                throw std::runtime_error("Error " + std::to_string(errno) + " getting old signal handler: " + std::string(strerror(errno)));
+            }
+            old_handler_sigpipe = sa_old.sa_handler;
+            sa.sa_handler = sighandler;
+            ret = sigaction(SIGPIPE, &sa, NULL);
+            if (ret)
+            {
+                throw std::runtime_error("Error " + std::to_string(errno) + " getting old signal handler: " + std::string(strerror(errno)));
+            }
 #endif
 #endif
+        }
     }
 
     MotorShield::~MotorShield()
     {
-        std::lock_guard<std::mutex>lock(handler_lock);
+        std::lock_guard<std::mutex> lock(handler_lock);
         for (int i = 0; i < 4; i++)
         {
             // remove motor from list of vectors for signal handler
@@ -344,7 +404,7 @@ namespace Adafruit
             dcmotors[num].IN1pin = in1;
             dcmotors[num].IN2pin = in2;
         }
-        std::lock_guard<std::mutex>lock(handler_lock);
+        std::lock_guard<std::mutex> lock(handler_lock);
         lib_dcmotors.push_back(&dcmotors[num]);
         return &dcmotors[num];
     }
@@ -422,7 +482,7 @@ namespace Adafruit
             steppers[port].BIN1pin = bin1;
             steppers[port].BIN2pin = bin2;
         }
-        std::lock_guard<std::mutex>lock(handler_lock);
+        std::lock_guard<std::mutex> lock(handler_lock);
         lib_steppers.push_back((void *)&steppers[port]);
         return &steppers[port];
     }
